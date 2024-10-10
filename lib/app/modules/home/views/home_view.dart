@@ -1,8 +1,12 @@
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_routes.dart';
 
 class HomeView extends StatelessWidget {
+  const HomeView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(  // SafeArea added here
@@ -153,30 +157,43 @@ class HomeView extends StatelessWidget {
         ),
 
         bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home, color: Colors.black,),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.card_giftcard, color: Colors.black,),
-              label: 'Voucher',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart, color: Colors.black,),
-              label: 'My Order',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person, color: Colors.black,),
-              label: 'Profile',
-            ),
-          ],
-          currentIndex: 0, // Set the current selected index
-          selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
-          onTap: (int index) {
-            // Add navigation functionality if needed
-          },
-        ),
+        currentIndex: 0, // index aktif
+        
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Get.toNamed(AppRoutes.HOME);
+              break;
+
+            
+
+              case 2:
+              Get.toNamed(AppRoutes.MY_ORDER);
+              break;
+
+              case 3:
+              Get.toNamed(AppRoutes.PROFILE);
+              break;
+
+              /*
+            case 1:
+              Get.toNamed(AppRoutes.VOUCHER);
+              break;
+            case 3:
+              Get.toNamed(AppRoutes.PROFILE);
+              break;
+
+              */
+          }
+        },
+        
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black,), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.card_giftcard, color: Colors.black,), label: 'Voucher'),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart, color: Colors.black,), label: 'My Order'),
+          BottomNavigationBarItem(icon: Icon(Icons.person, color: Colors.black,), label: 'Profile'),
+        ],
+      ),
       ),
     );
   }

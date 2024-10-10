@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import '../../../../routes/app_routes.dart';
 
 class FoodView extends StatefulWidget {
+  const FoodView({super.key});
+
   @override
   _FoodViewState createState() => _FoodViewState();
 }
@@ -17,7 +19,7 @@ class _FoodViewState extends State<FoodView> {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Get.back(); // Navigasi ke halaman sebelumnya
             },
@@ -36,7 +38,7 @@ class _FoodViewState extends State<FoodView> {
             crossAxisAlignment: CrossAxisAlignment.center, // Posisi di tengah
             children: [
               // Memposisikan tulisan Food's Menu di tengah
-              Align(
+              const Align(
                 alignment: Alignment.center,
                 child: Text(
                   "Food's Menu",
@@ -46,7 +48,7 @@ class _FoodViewState extends State<FoodView> {
                   ),
                 ),
               ),
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               
               // Memposisikan section makanan di tengah
               Center(
@@ -70,7 +72,7 @@ class _FoodViewState extends State<FoodView> {
                         });
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Nasi Goreng Section
                     _buildFoodItem(
@@ -94,10 +96,10 @@ class _FoodViewState extends State<FoodView> {
                 ),
               ),
               
-              Spacer(),
+              const Spacer(),
 
               // Spacer digunakan untuk mengatur tombol agar tidak terlalu ke bawah
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               // ADD TO MY ORDER Button
               Center(
@@ -105,15 +107,15 @@ class _FoodViewState extends State<FoodView> {
                   onPressed: () {
                     Get.toNamed(AppRoutes.START_TO_BUY); // Navigate back to Start_To_Buy page
                   },
-                  child: Text('ADD TO MY ORDER', style: TextStyle(color: Colors.white,)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    textStyle: TextStyle(fontSize: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    textStyle: const TextStyle(fontSize: 15),
                   ),
+                  child: const Text('ADD TO MY ORDER', style: TextStyle(color: Colors.white,)),
                 ),
               ),
-               SizedBox(height: 50),
+               const SizedBox(height: 50),
             ],
           ),
         ),
@@ -138,7 +140,7 @@ class _FoodViewState extends State<FoodView> {
       borderRadius: BorderRadius.circular(14),
       color: const Color.fromARGB(255, 243, 238, 197),
     ),
-    padding: EdgeInsets.all(14),
+    padding: const EdgeInsets.all(14),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -156,65 +158,65 @@ class _FoodViewState extends State<FoodView> {
           ),
         ),
 
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 name,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(description),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 price,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               // Tombol tambah/kurang di bawah harga
               Row(
                 children: [
                   Container(
                     width: 25,
                     height: 25,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
                      
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.remove),
+                      icon: const Icon(Icons.remove),
                       onPressed: onRemove,
                       padding: EdgeInsets.zero,
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Text(
                     '$quantity',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
 
                   Container(
                     width: 25,
                     height: 25,
 
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
                      
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.add),
+                      icon: const Icon(Icons.add),
                       onPressed: onAdd,
                       padding: EdgeInsets.zero,
                     ),

@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import '../../../../routes/app_routes.dart'; // Ganti sesuai dengan struktur proyek
 
 class StartToBuyView extends StatelessWidget {
+  const StartToBuyView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Get.back(); // Navigasi ke halaman sebelumnya
           },
@@ -26,8 +28,8 @@ class StartToBuyView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'What you want to buy ?',
               style: TextStyle(
                 fontSize: 25,
@@ -35,7 +37,7 @@ class StartToBuyView extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             // Grid buttons
             Expanded(
               child: GridView.count(
@@ -53,15 +55,12 @@ class StartToBuyView extends StatelessWidget {
               ),
             ),
             // Continue Button
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                Get.toNamed(AppRoutes.MY_ORDER);
                 // Action for continue button if needed
               },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 15.0),
-                child: Text('Continue', style: TextStyle(fontSize: 16, color: Colors.white)),
-              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
@@ -69,8 +68,12 @@ class StartToBuyView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 15.0),
+                child: Text('Continue', style: TextStyle(fontSize: 16, color: Colors.white)),
+              ),
             ),
-             SizedBox(height: 40),
+             const SizedBox(height: 40),
           ],
         ),
       ),
@@ -84,12 +87,17 @@ class StartToBuyView extends StatelessWidget {
               Get.toNamed(AppRoutes.HOME);
               break;
 
+              case 2:
+              Get.toNamed(AppRoutes.MY_ORDER);
+              break;
+
+              case 3:
+              Get.toNamed(AppRoutes.PROFILE);
+              break;
+              
               /*
             case 1:
               Get.toNamed(AppRoutes.VOUCHER);
-              break;
-            case 2:
-              Get.toNamed(AppRoutes.MYORDER);
               break;
             case 3:
               Get.toNamed(AppRoutes.PROFILE);
@@ -99,7 +107,7 @@ class StartToBuyView extends StatelessWidget {
           }
         },
         
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black,), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.card_giftcard, color: Colors.black,), label: 'Voucher'),
           BottomNavigationBarItem(icon: Icon(Icons.shopping_cart, color: Colors.black,), label: 'My Order'),
@@ -124,8 +132,8 @@ class StartToBuyView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 50, color: Colors.black),
-            SizedBox(height: 10),
-            Text(label, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           ],
         ),
       ),

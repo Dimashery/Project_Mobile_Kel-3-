@@ -71,8 +71,13 @@ flutter:
 
     - assets/images/soft_drink/coca_cola.png
     - assets/images/soft_drink/fanta.png
-
+    - assets/images/logo/doi_coffee.png
     
+    
+    - assets/images/vector/rating.png
+    - assets/images/vector/teman.png
+    
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

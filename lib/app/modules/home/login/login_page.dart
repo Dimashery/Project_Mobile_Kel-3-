@@ -87,8 +87,8 @@ class LoginPage extends StatelessWidget {
                   Get.offNamed(AppRoutes.HOME);  // Navigasi ke halaman home setelah login
                 },
                 child: Container(
-                  width: double.infinity,
-                  height: 40,
+                  width: 300,
+                  height: 50,
                   decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(20)),
@@ -105,7 +105,7 @@ class LoginPage extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  // Aksi untuk lupa password bisa ditambahkan di sini
+                  Get.offNamed(AppRoutes.FORGET_PASSWORD);
                 },
                 child: const Text(
                   "Forget Password",

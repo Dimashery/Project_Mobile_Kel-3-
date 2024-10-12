@@ -34,6 +34,7 @@ class AccountSecurityView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

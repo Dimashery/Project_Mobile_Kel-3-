@@ -39,11 +39,12 @@ class RatingPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              
               // Gambar ilustrasi
               SizedBox(
                 height: 250,
                 child: Image.asset(
-                  'assets/rating_illustration.png', // Ganti dengan path gambar lokal Anda
+                  'assets/images/vector/rating.png', // Ganti dengan path gambar lokal Anda
                   fit: BoxFit.contain,
                 ),
               ),
@@ -58,9 +59,12 @@ class RatingPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
+              
+              
               // Tombol "Give Us The Rating"
               SizedBox(
-                width: double.infinity,
+                width: 250,
+                height: 50,
                 child: ElevatedButton(
                   onPressed: () {
                     // Aksi ketika tombol ditekan
@@ -83,6 +87,8 @@ class RatingPage extends StatelessWidget {
                   ),
                 ),
               ),
+
+
             ],
           ),
         ),

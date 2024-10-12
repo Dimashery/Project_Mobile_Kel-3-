@@ -38,7 +38,7 @@ class SignUpPage extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 100),
+              const SizedBox(height: 80),
               const Text(
                 'Sign Up Account',
                 style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
@@ -102,8 +102,8 @@ class SignUpPage extends StatelessWidget {
                   Get.toNamed(AppRoutes.SIGNUP_SUCCESS_PAGE);  // Navigasi ke halaman sukses Sign Up
                 },
                 child: Container(
-                  width: double.infinity,
-                  height: 40,
+                  width: 300,
+                  height: 50,
                   decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(20)),

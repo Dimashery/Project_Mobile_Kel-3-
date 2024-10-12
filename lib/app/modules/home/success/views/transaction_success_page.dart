@@ -13,19 +13,31 @@ class TransactionSuccessPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.check_circle, size: 100, color: Colors.green),
+            const Icon(Icons.check_circle, size: 100, color: Color.fromARGB(255, 0, 0, 0)),
 
             const SizedBox(height: 20),
             const Text('Your Payment is Complete', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
             const SizedBox(height: 20),
 
-            ElevatedButton(
-              onPressed: () {
-                Get.toNamed(AppRoutes.CHECK_ORDER);
-              },
-              
-              child: const Text('Check Your Order', style: TextStyle(color: Colors.white),),
-            ),
+            GestureDetector(
+                onTap: () {
+                  Get.offNamed(AppRoutes.CHECK_ORDER);  // Kembali ke halaman Login
+                },
+                child: Container(
+                  width: 250,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "Check Your Order",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),

@@ -63,7 +63,7 @@ class FavoriteMenuPage extends StatelessWidget {
                       height: 80,
                       width: 80,
                       child: Image.asset(
-                        'assets/kopi_tubruk.png', // Ganti dengan gambar kopi tubruk
+                        'assets/images/coffee/kopi_tubruk.png', // Ganti dengan gambar kopi tubruk
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -117,7 +117,7 @@ class FavoriteMenuPage extends StatelessWidget {
                       height: 80,
                       width: 80,
                       child: Image.asset(
-                        'assets/es_taro.png', // Ganti dengan gambar es taro
+                        'assets/images/snack/tempe_mendoan.png', // Ganti dengan gambar es taro
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -127,7 +127,7 @@ class FavoriteMenuPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Es Taro',
+                          'Tempe Mendoan',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -142,7 +142,7 @@ class FavoriteMenuPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: const Text(
-                            'Rp. 15.000',
+                            'Rp. 10.000',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black87,

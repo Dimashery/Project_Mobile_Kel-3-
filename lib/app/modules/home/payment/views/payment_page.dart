@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../routes/app_routes.dart'; // Sesuaikan dengan struktur proyek Anda
 
-class PaymentPage extends StatelessWidget {
+class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
+
+  @override
+  _PaymentPageState createState() => _PaymentPageState();
+}
+
+class _PaymentPageState extends State<PaymentPage> {
+  String? selectedPaymentMethod; // Menyimpan metode pembayaran yang dipilih
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +29,10 @@ class PaymentPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
             // Kotak merah tua di atas untuk "Payment" dan "Total"
             Container(
-              width: 500,
+              width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.red[800], // Warna merah tua
@@ -49,31 +57,48 @@ class PaymentPage extends StatelessWidget {
 
             const Text('Choose your preferred payment method', style: TextStyle(fontSize: 18)),
             const SizedBox(height: 20),
-            _buildPaymentOption('OVO','OVO'),
+
+            // Opsi metode pembayaran dengan tombol Radio di sebelah kanan
+            _buildPaymentOption('OVO', 'OVO'),
             _buildPaymentOption('DANA', 'DANA Wallet'),
             _buildPaymentOption('BCA Virtual Account', 'BCA'),
+
             const Spacer(),
 
+            // Teks catatan di bawah metode pembayaran
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: Text(
+                "*Make sure your order is appropriate\n"
+                "*Make sure your payment method matches your choice",
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+            const SizedBox(height: 70),
+
+
+            // Tombol "Pay Now"
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  Get.toNamed(AppRoutes.TRANSACTION_SUCCESS); // Arahkan ke halaman transaksi berhasil
+                 Get.toNamed(AppRoutes.TRANSACTION_SUCCESS); // Arahkan ke halaman transaksi berhasil
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 17),
                   backgroundColor: Colors.black,
                 ),
                 child: const Text('Pay Now', style: TextStyle(color: Colors.white)),
               ),
             ),
-            const SizedBox(height: 100),
+            const SizedBox(height: 20), // Jarak tambahan di bagian bawah
           ],
         ),
       ),
     );
   }
 
- Widget _buildPaymentOption(String paymentMethod, String description) {
+  // Fungsi untuk membuat opsi metode pembayaran
+  Widget _buildPaymentOption(String paymentMethod, String description) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10), // Jarak antar opsi pembayaran
       decoration: BoxDecoration(
@@ -85,10 +110,14 @@ class PaymentPage extends StatelessWidget {
         children: [
           ListTile(
             title: Text(paymentMethod),
-            leading: Radio(
+            trailing: Radio<String>(
               value: paymentMethod,
-              groupValue: 'payment',
-              onChanged: (value) {},
+              groupValue: selectedPaymentMethod, // Mengatur metode pembayaran yang dipilih
+              onChanged: (value) {
+                setState(() {
+                  selectedPaymentMethod = value; // Menyimpan metode yang dipilih
+                });
+              },
             ),
           ),
           Padding(

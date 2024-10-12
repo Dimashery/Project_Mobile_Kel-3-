@@ -79,7 +79,8 @@ class FreeVoucherPage extends StatelessWidget {
               const SizedBox(height: 30),
               // Tombol "Invite Now"
               SizedBox(
-                width: double.infinity,
+                width: 250,
+                height: 50,
                 child: ElevatedButton(
                   onPressed: () {
                     // Aksi ketika tombol ditekan

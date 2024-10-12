@@ -22,6 +22,8 @@ class MyOrderPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            const SizedBox(height: 30),
             // Kotak abu-abu di atas
             Container(
               padding: const EdgeInsets.all(16),
@@ -29,10 +31,17 @@ class MyOrderPage extends StatelessWidget {
                 color: Colors.grey[300], // Warna abu-abu
                 borderRadius: BorderRadius.circular(8),
               ),
+              
+
+
+              
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                
+                
                 children: [
                   Text(
+                    
                     'MyOrder (2)',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
@@ -50,7 +59,7 @@ class MyOrderPage extends StatelessWidget {
             const SizedBox(height: 20), // Jarak setelah kotak
 
             
-            const SizedBox(height: 70),
+            const SizedBox(height: 25),
 
             _buildOrderItem(
               'Indomie Goreng',
@@ -63,7 +72,7 @@ class MyOrderPage extends StatelessWidget {
               'Rp. 16.000',
               'assets/images/food/nasi_goreng.png', // Ganti dengan path gambar yang sesuai
             ),
-            const SizedBox(height: 60),
+            const SizedBox(height: 50),
              Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -94,7 +103,7 @@ class MyOrderPage extends StatelessWidget {
             //   ),
             // ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 50),
             _buildTotalSummary(),
             const SizedBox(height: 100),
 
@@ -102,13 +111,14 @@ class MyOrderPage extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 onPressed: () {
+            
                   Get.toNamed(AppRoutes.PAYMENT); // Arahkan ke halaman Payment
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 20),
                   backgroundColor: Colors.black,
                 ),
-                child: const Text('Check Out', style: TextStyle(color: Colors.white)),
+                child: const Text('Check Out', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
               ),
             ),
           ],

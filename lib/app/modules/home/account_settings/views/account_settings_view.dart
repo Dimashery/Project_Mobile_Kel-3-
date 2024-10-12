@@ -45,15 +45,17 @@ class AccountSettingsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
+
+            // Add Account GestureDetector
             GestureDetector(
               onTap: () {
                 // Aksi untuk menambahkan akun
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: Colors.grey.shade300, width: 1),
+                    bottom: BorderSide(color: Colors.white, width: 1),
                   ),
                 ),
                 child: const Text(
@@ -64,15 +66,20 @@ class AccountSettingsScreen extends StatelessWidget {
                 ),
               ),
             ),
+
+            // Divider
+            const Divider(height: 30, thickness: 1),
+
+            // Log Out GestureDetector
             GestureDetector(
               onTap: () {
                 Get.toNamed('/login_page');
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: Colors.grey.shade300, width: 1),
+                    bottom: BorderSide(color: Colors.white, width: 1),
                   ),
                 ),
                 child: const Text(
@@ -84,6 +91,8 @@ class AccountSettingsScreen extends StatelessWidget {
                 ),
               ),
             ),
+
+            const Divider(height: 30, thickness: 1),
           ],
         ),
       ),

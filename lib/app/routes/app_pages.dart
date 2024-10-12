@@ -3,11 +3,19 @@
 import 'package:get/get.dart';
 //LOGIN
 
+
 import '../modules/home/login/login_page.dart';
 import '../modules/home/login/page_start.dart';
 import '../modules/home/login/sign_up_page.dart';
 import '../modules/home/login/sign_up_success_page.dart';
 import '../modules/home/login/welcome_page.dart';
+
+//FORGET PASSWORD
+import '../modules/home/forget_password/change_password_page.dart';
+import '../modules/home/forget_password/forget_password_page.dart';
+import '../modules/home/forget_password/password_changed_page.dart';
+import '../modules/home/forget_password/verify_code_page.dart';
+
 
 //MAIN MENU
 import '../modules/home/notification/views/notification_view.dart';
@@ -54,6 +62,13 @@ class AppPages {
     GetPage(name: AppRoutes.LOGIN_PAGE, page: () => LoginPage()),
     GetPage(name: AppRoutes.SIGNUP_PAGE, page: () => SignUpPage()),
     GetPage(name: AppRoutes.SIGNUP_SUCCESS_PAGE, page: () => const SignUpSuccessPage()),
+
+    
+    GetPage(name: AppRoutes.FORGET_PASSWORD,page: () => ForgetPasswordPage(),),
+    GetPage(name: AppRoutes.VERIFY_CODE,page: () => VerifyCodePage(),),
+    GetPage(name: AppRoutes.CHANGE_PASSWORD,page: () => ChangePasswordPage(),),
+    GetPage(name: AppRoutes.PASSWORD_CHANGED,page: () => const PasswordChangedPage(),),
+
 
     GetPage(name: AppRoutes.HOME, page: () => const HomeView()),
     GetPage(name: AppRoutes.START_TO_BUY, page: () => const StartToBuyView()),

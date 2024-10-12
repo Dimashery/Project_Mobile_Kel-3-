@@ -8,6 +8,14 @@ abstract class AppRoutes {
   static const String SIGNUP_PAGE = '/signup_page';
   static const String SIGNUP_SUCCESS_PAGE = '/signup_success_page';
  
+  static const FORGET_PASSWORD = '/forget-password';
+  static const VERIFY_CODE = '/verify-code';
+  static const CHANGE_PASSWORD = '/change-password';
+  static const PASSWORD_CHANGED = '/password-changed';
+
+
+
+
   static const String HOME = '/home';
   static const String START_TO_BUY = '/start_to_buy'; // Pastikan ini konsisten
   static const String FOOD = '/food';

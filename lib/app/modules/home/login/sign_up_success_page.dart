@@ -25,29 +25,29 @@ class SignUpSuccessPage extends StatelessWidget {
                   const Image(width: 100, image: AssetImage('assets/images/logo/doi_coffee.png')), // Path logo sesuaikan
                   GestureDetector(
                     onTap: () {
-                      Get.toNamed(AppRoutes.SIGNUP_PAGE); // Menggunakan navigasi GetX
+                      Get.toNamed(AppRoutes.LOGIN_PAGE); // Menggunakan navigasi GetX
                     },
                     child: const Text(
-                      "Sign Up!",
+                      "Sign In!",
                       style: TextStyle(decoration: TextDecoration.underline),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 100),
+              const SizedBox(height: 150),
               const Text(
                 "You Have Successfully Registered an Account",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 28),
-              const Icon(Icons.check_circle, color: Colors.green, size: 100), // Mengganti gambar dengan ikon
+              const SizedBox(height: 50),
+              const Icon(Icons.check_circle, color: Colors.black, size: 150), // Mengganti gambar dengan ikon
               const SizedBox(height: 58),
               GestureDetector(
                 onTap: () => Get.offNamed(AppRoutes.LOGIN_PAGE), // Kembali ke LoginPage menggunakan GetX
                 child: Container(
-                  width: double.infinity,
-                  height: 40,
+                  width: 300,
+                  height: 50,
                   decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(20),

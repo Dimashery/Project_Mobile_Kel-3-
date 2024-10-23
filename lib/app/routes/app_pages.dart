@@ -1,53 +1,48 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, constant_identifier_names
 
 import 'package:get/get.dart';
+
 //LOGIN
-
-
-import '../modules/home/login/login_page.dart';
-import '../modules/home/login/page_start.dart';
-import '../modules/home/login/sign_up_page.dart';
-import '../modules/home/login/sign_up_success_page.dart';
-import '../modules/home/login/welcome_page.dart';
+import '../modules/login/login_page/views/login_page.dart';
+import '../modules/login/page_start/views/page_start.dart';
+import '../modules/login/sign_up/views/sign_up_page.dart';
+import '../modules/login/sign_up_success/views/sign_up_success_page.dart';
+import '../modules/login/welcome_page/views/welcome_page.dart';
 
 //FORGET PASSWORD
-import '../modules/home/forget_password/change_password_page.dart';
-import '../modules/home/forget_password/forget_password_page.dart';
-import '../modules/home/forget_password/password_changed_page.dart';
-import '../modules/home/forget_password/verify_code_page.dart';
-
+import '../modules/forget_password/change_password/views/change_password_page.dart';
+import '../modules/forget_password/forget_password/views/forget_password_page.dart';
+import '../modules/forget_password/password_changed/views/password_changed_page.dart';
+import '../modules/forget_password/verify_code/views/verify_code_page.dart';
 
 //MAIN MENU
-import '../modules/home/notification/views/notification_view.dart';
-import '../modules/home/order/views/my_order_page.dart';
-import '../modules/home/profile/views/profile_view.dart';
+import '../modules/notification/views/notification_view.dart';
+import '../modules/food/views/food_view.dart';
+import '../modules/drink/views/drink_view.dart';
+import '../modules/snack/views/snack_view.dart';
+import '../modules/coffee/views/coffee_view.dart';
+import '../modules/soft_drink/views/soft_drink_view.dart';
+import '../modules/start_to_buy/start_to_buy1/views/start_to_buy_view.dart';
 import '../modules/home/views/home_view.dart';
-import '../modules/home/start_to_buy/views/start_to_buy_view.dart';
-import '../modules/home/food/views/food_view.dart';
-import '../modules/home/drink/views/drink_view.dart';
-import '../modules/home/snack/views/snack_view.dart';
-import '../modules/home/coffee/views/coffee_view.dart';
-import '../modules/home/soft_drink/views/soft_drink_view.dart';
 
 //TRANSAKSI , MYORDER
-import '../modules/home/start_to_buy/views/start_to_buy2_page.dart';
-import '../modules/home/payment/views/payment_page.dart';
-import '../modules/home/success/views/transaction_success_page.dart';
-import '../modules/home/check_order/views/check_order_page.dart';
-
+import '../modules/start_to_buy/start_to_buy2/views/start_to_buy2_page.dart';
+import '../modules/transaction_success/views/transaction_success_page.dart';
+import '../modules/payment/views/payment_page.dart';
+import '../modules/order/views/my_order_page.dart';
 
 //PROFILE
-import '../modules/home/account_security/views/account_security_view.dart';
-import '../modules/home/account_settings/views/account_settings_view.dart';
-import '../modules/home/favorite/favorite_view.dart';
-import '../modules/home/free_voucher/views/free_voucher_view.dart';
-import '../modules/home/give_rating/views/give_rating_view.dart';
-import '../modules/home/history/views/history_view.dart';
-import '../modules/home/language/views/language_view.dart';
+import '../modules/profile/views/profile_view.dart';
+import '../modules/account_security/views/account_security_view.dart';
+import '../modules/account_settings/views/account_settings_view.dart';
+import '../modules/check_order/views/check_order_page.dart';
+import '../modules/favorite/views/favorite_view.dart';
+import '../modules/free_voucher/views/free_voucher_view.dart';
+import '../modules/give_rating/views/give_rating_view.dart';
+import '../modules/history/views/history_view.dart';
+import '../modules/language/views/language_view.dart';
 
-
-
-
+//Routes
 import 'app_routes.dart';
 
 

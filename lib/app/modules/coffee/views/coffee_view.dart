@@ -7,12 +7,12 @@ class CoffeeView extends StatefulWidget {
   const CoffeeView({super.key});
 
   @override
-  _CoffeeViewState createState() => _CoffeeViewState();
+  CoffeeViewState createState() => CoffeeViewState();
 }
 
-class _CoffeeViewState extends State<CoffeeView> {
-  int _kopiTubrukQty = 1; // Quantity for Kopi Tubruk
-  int _esTaroQty = 1;     // Quantity for Es Taro
+class CoffeeViewState extends State<CoffeeView> {
+  int kopiTubrukQty = 1; // Quantity for Kopi Tubruk
+  int esTaroQty = 1;     // Quantity for Es Taro
 
   @override
   Widget build(BuildContext context) {
@@ -56,40 +56,40 @@ class _CoffeeViewState extends State<CoffeeView> {
                 child: Column(
                   children: [
                     // Kopi Tubruk Section
-                    _buildCoffeeItem(
+                    buildCoffeeItem(
                       imagePath: 'assets/images/coffee/kopi_tubruk.png', // Ganti dengan path gambar yang sesuai
                       name: 'Kopi Tubruk',
                       description: 'Kopi Tubruk dengan rempah-rempah',
                       price: 'Rp. 7.000',
-                      quantity: _kopiTubrukQty,
+                      quantity: kopiTubrukQty,
                       onAdd: () {
                         setState(() {
-                          _kopiTubrukQty++;
+                          kopiTubrukQty++;
                         });
                       },
                       onRemove: () {
                         setState(() {
-                          if (_kopiTubrukQty > 1) _kopiTubrukQty--;
+                          if (kopiTubrukQty > 1) kopiTubrukQty--;
                         });
                       },
                     ),
                     const SizedBox(height: 20),
 
                     // Es Taro Section
-                    _buildCoffeeItem(
+                    buildCoffeeItem(
                       imagePath: 'assets/images/coffee/cappucino.png', // Ganti dengan path gambar yang sesuai
                       name: 'Cappucino',
                       description: 'Cappucino dengan cream dan manis yang pas',
                       price: 'Rp. 10.000',
-                      quantity: _esTaroQty,
+                      quantity: esTaroQty,
                       onAdd: () {
                         setState(() {
-                          _esTaroQty++;
+                          esTaroQty++;
                         });
                       },
                       onRemove: () {
                         setState(() {
-                          if (_esTaroQty > 1) _esTaroQty--;
+                          if (esTaroQty > 1) esTaroQty--;
                         });
                       },
                     ),
@@ -123,7 +123,7 @@ class _CoffeeViewState extends State<CoffeeView> {
   }
 
   // Widget untuk membuat tampilan tiap minuman dengan gambar di kiri dan teks di kanan
-  Widget _buildCoffeeItem({
+  Widget buildCoffeeItem({
   required String imagePath,
   required String name,
   required String description,
@@ -143,7 +143,6 @@ class _CoffeeViewState extends State<CoffeeView> {
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
         Container(
           height: 200,
           width: 200,
@@ -187,7 +186,6 @@ class _CoffeeViewState extends State<CoffeeView> {
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
-                     
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.remove),
@@ -201,15 +199,12 @@ class _CoffeeViewState extends State<CoffeeView> {
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(width: 10),
-
                   Container(
                     width: 25,
                     height: 25,
-
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
-                     
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.add),
@@ -225,6 +220,5 @@ class _CoffeeViewState extends State<CoffeeView> {
       ],
     ),
   );
-}
-
+  }
 }

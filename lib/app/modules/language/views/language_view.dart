@@ -6,10 +6,7 @@ class LanguageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LanguageSelectionScreen(),
-    );
+    return const LanguageSelectionScreen();
   }
 }
 
@@ -17,11 +14,10 @@ class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
 
   @override
-  _LanguageSelectionScreenState createState() =>
-      _LanguageSelectionScreenState();
+  LanguageSelectionScreenState createState() => LanguageSelectionScreenState();
 }
 
-class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
+class LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   String _selectedLanguage = '';
 
   @override
@@ -31,13 +27,13 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Get.toNamed('/profile');
+            Get.back(); // Menggunakan Get.back() untuk kembali ke halaman sebelumnya
           },
         ),
         title: const Text('Language'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        elevation: 0, // Hilangkan bayangan app bar
+        elevation: 0, // Menghilangkan bayangan pada AppBar
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -46,7 +42,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
           children: [
             const SizedBox(height: 20),
             const Text(
-              'Languange', // Ada typo di gambar aslinya
+              'Language', // Mengoreksi typo "Languange"
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

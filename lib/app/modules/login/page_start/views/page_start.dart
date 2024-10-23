@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../routes/app_routes.dart';
 
-
 class PageStart extends StatefulWidget {
   const PageStart({super.key});
 
   @override
-  _PageStartState createState() => _PageStartState();
+  PageStartState createState() => PageStartState();  // Nama class sekarang public tanpa underscore
 }
 
-class _PageStartState extends State<PageStart> {
+class PageStartState extends State<PageStart> {  // Class sekarang public tanpa underscore
   @override
   void initState() {
     super.initState();

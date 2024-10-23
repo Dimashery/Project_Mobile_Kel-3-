@@ -6,10 +6,10 @@ class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
 
   @override
-  _PaymentPageState createState() => _PaymentPageState();
+  PaymentPageState createState() => PaymentPageState();  // Ubah nama class menjadi public
 }
 
-class _PaymentPageState extends State<PaymentPage> {
+class PaymentPageState extends State<PaymentPage> {  // Class sekarang public tanpa underscore
   String? selectedPaymentMethod; // Menyimpan metode pembayaran yang dipilih
 
   @override
@@ -75,7 +75,6 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
             ),
             const SizedBox(height: 70),
-
 
             // Tombol "Pay Now"
             Center(

@@ -6,10 +6,10 @@ class SnackView extends StatefulWidget {
   const SnackView({super.key});
 
   @override
-  _SnackViewState createState() => _SnackViewState();
+  SnackViewState createState() => SnackViewState(); // Make it public by removing the underscore
 }
 
-class _SnackViewState extends State<SnackView> {
+class SnackViewState extends State<SnackView> { // Change here
   int _tempeMendoanQty = 1; // Quantity for Tempe Mendoan
   int _kentangGorengQty = 1; // Quantity for Kentang Goreng
 
@@ -107,7 +107,7 @@ class _SnackViewState extends State<SnackView> {
                     padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     textStyle: const TextStyle(fontSize: 15),
                   ),
-                  child: const Text('ADD TO MY ORDER', style: TextStyle(color: Colors.white,)),
+                  child: const Text('ADD TO MY ORDER', style: TextStyle(color: Colors.white)),
                 ),
               ),
               const SizedBox(height: 50),
@@ -119,106 +119,101 @@ class _SnackViewState extends State<SnackView> {
   }
 
   Widget _buildSnackItem({
-  required String imagePath,
-  required String name,
-  required String description,
-  required String price,
-  required int quantity,
-  required VoidCallback onAdd,
-  required VoidCallback onRemove,
-}) {
-  return Container(
-    height: 250,
-    width: 1000,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(14),
-      color: const Color.fromARGB(255, 243, 238, 197),
-    ),
-    padding: const EdgeInsets.all(14),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        
-        Container(
-          height: 180,
-          width: 180,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: AssetImage(imagePath),
-              fit: BoxFit.contain,
+    required String imagePath,
+    required String name,
+    required String description,
+    required String price,
+    required int quantity,
+    required VoidCallback onAdd,
+    required VoidCallback onRemove,
+  }) {
+    return Container(
+      height: 250,
+      width: 1000,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        color: const Color.fromARGB(255, 243, 238, 197),
+      ),
+      padding: const EdgeInsets.all(14),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 180,
+            width: 180,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: AssetImage(imagePath),
+                fit: BoxFit.contain,
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              Text(
-                name,
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(description),
-              const SizedBox(height: 10),
-              Text(
-                price,
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
+                Text(description),
+                const SizedBox(height: 10),
+                Text(
+                  price,
+                  style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              // Tombol tambah/kurang di bawah harga
-              Row(
-                children: [
-                  Container(
-                    width: 25,
-                    height: 25,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                     
+                const SizedBox(height: 10),
+                // Tombol tambah/kurang di bawah harga
+                Row(
+                  children: [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.remove),
+                        onPressed: onRemove,
+                        padding: EdgeInsets.zero,
+                      ),
                     ),
-                    child: IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: onRemove,
-                      padding: EdgeInsets.zero,
+                    const SizedBox(width: 10),
+                    Text(
+                      '$quantity',
+                      style: const TextStyle(fontSize: 16),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    '$quantity',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(width: 10),
-
-                  Container(
-                    width: 25,
-                    height: 25,
-
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                     
+                    const SizedBox(width: 10),
+                    Container(
+                      width: 25,
+                      height: 25,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: onAdd,
+                        padding: EdgeInsets.zero,
+                      ),
                     ),
-                    child: IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: onAdd,
-                      padding: EdgeInsets.zero,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 }

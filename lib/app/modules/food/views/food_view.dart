@@ -6,12 +6,12 @@ class FoodView extends StatefulWidget {
   const FoodView({super.key});
 
   @override
-  _FoodViewState createState() => _FoodViewState();
+  FoodViewState createState() => FoodViewState();
 }
 
-class _FoodViewState extends State<FoodView> {
-  int _indomieGorengQty = 1; // Quantity for Indomie Goreng
-  int _nasiGorengQty = 1;    // Quantity for Nasi Goreng
+class FoodViewState extends State<FoodView> {
+  int indomieGorengQty = 1; // Quantity for Indomie Goreng
+  int nasiGorengQty = 1;    // Quantity for Nasi Goreng
 
   @override
   Widget build(BuildContext context) {
@@ -55,40 +55,40 @@ class _FoodViewState extends State<FoodView> {
                 child: Column(
                   children: [
                     // Indomie Goreng Section
-                    _buildFoodItem(
+                    buildFoodItem(
                       imagePath: 'assets/images/food/indomie_goreng.png', // Placeholder for actual image
                       name: 'Indomie Goreng',
                       description: 'Indomie Goreng dengan Telur',
                       price: 'Rp. 15.000',
-                      quantity: _indomieGorengQty,
+                      quantity: indomieGorengQty,
                       onAdd: () {
                         setState(() {
-                          _indomieGorengQty++;
+                          indomieGorengQty++;
                         });
                       },
                       onRemove: () {
                         setState(() {
-                          if (_indomieGorengQty > 1) _indomieGorengQty--;
+                          if (indomieGorengQty > 1) indomieGorengQty--;
                         });
                       },
                     ),
                     const SizedBox(height: 20),
 
                     // Nasi Goreng Section
-                    _buildFoodItem(
+                    buildFoodItem(
                       imagePath: 'assets/images/food/nasi_goreng.png', // Placeholder for actual image
                       name: 'Nasi Goreng',
                       description: 'Nasi Goreng dengan Telur',
                       price: 'Rp. 16.000',
-                      quantity: _nasiGorengQty,
+                      quantity: nasiGorengQty,
                       onAdd: () {
                         setState(() {
-                          _nasiGorengQty++;
+                          nasiGorengQty++;
                         });
                       },
                       onRemove: () {
                         setState(() {
-                          if (_nasiGorengQty > 1) _nasiGorengQty--;
+                          if (nasiGorengQty > 1) nasiGorengQty--;
                         });
                       },
                     ),
@@ -124,7 +124,7 @@ class _FoodViewState extends State<FoodView> {
   }
 
   // Widget untuk membuat tampilan tiap makanan dengan gambar di kiri dan teks di kanan
-  Widget _buildFoodItem({
+  Widget buildFoodItem({
   required String imagePath,
   required String name,
   required String description,
@@ -144,8 +144,6 @@ class _FoodViewState extends State<FoodView> {
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
-
         Container(
           height: 200,
           width: 200,
@@ -157,9 +155,7 @@ class _FoodViewState extends State<FoodView> {
             ),
           ),
         ),
-
         const SizedBox(width: 10),
-        
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +187,6 @@ class _FoodViewState extends State<FoodView> {
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
-                     
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.remove),
@@ -209,11 +204,9 @@ class _FoodViewState extends State<FoodView> {
                   Container(
                     width: 25,
                     height: 25,
-
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
-                     
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.add),

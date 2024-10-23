@@ -17,12 +17,12 @@ class NotificationSettingsScreen extends StatefulWidget {
   const NotificationSettingsScreen({super.key});
 
   @override
-  _NotificationSettingsScreenState createState() =>
-      _NotificationSettingsScreenState();
+  NotificationSettingsScreenState createState() =>
+      NotificationSettingsScreenState();  // Nama class sekarang public tanpa underscore
 }
 
-class _NotificationSettingsScreenState
-    extends State<NotificationSettingsScreen> {
+class NotificationSettingsScreenState
+    extends State<NotificationSettingsScreen> {  // Class sekarang public tanpa underscore
   bool _orderNotification = false;
   bool _promoNotification = false;
 
@@ -73,7 +73,6 @@ class _NotificationSettingsScreenState
                 setState(() {
                   _promoNotification = value;
                 });
-                
               },
             ),
             const Divider(height: 30, thickness: 1),

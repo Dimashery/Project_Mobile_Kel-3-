@@ -6,12 +6,12 @@ class DrinkView extends StatefulWidget {
   const DrinkView({super.key});
 
   @override
-  _DrinkViewState createState() => _DrinkViewState();
+  DrinkViewState createState() => DrinkViewState();
 }
 
-class _DrinkViewState extends State<DrinkView> {
-  int _esTehQty = 1; // Quantity for Es Teh
-  int _esJerukQty = 1; // Quantity for Es Jeruk
+class DrinkViewState extends State<DrinkView> {
+  int esTehQty = 1; // Quantity for Es Teh
+  int esJerukQty = 1; // Quantity for Es Jeruk
 
   @override
   Widget build(BuildContext context) {
@@ -55,40 +55,40 @@ class _DrinkViewState extends State<DrinkView> {
                 child: Column(
                   children: [
                     // Es Teh Section
-                    _buildDrinkItem(
+                    buildDrinkItem(
                       imagePath: 'assets/images/drink/es_teh.png', // Placeholder for actual image
                       name: 'Es Teh',
                       description: 'Es Teh Manis Dingin',
                       price: 'Rp. 5.000',
-                      quantity: _esTehQty,
+                      quantity: esTehQty,
                       onAdd: () {
                         setState(() {
-                          _esTehQty++;
+                          esTehQty++;
                         });
                       },
                       onRemove: () {
                         setState(() {
-                          if (_esTehQty > 1) _esTehQty--;
+                          if (esTehQty > 1) esTehQty--;
                         });
                       },
                     ),
                     const SizedBox(height: 20),
 
                     // Es Jeruk Section
-                    _buildDrinkItem(
+                    buildDrinkItem(
                       imagePath: 'assets/images/drink/es_jeruk.png', // Placeholder for actual image
                       name: 'Es Jeruk',
                       description: 'Es Jeruk Segar',
                       price: 'Rp. 7.000',
-                      quantity: _esJerukQty,
+                      quantity: esJerukQty,
                       onAdd: () {
                         setState(() {
-                          _esJerukQty++;
+                          esJerukQty++;
                         });
                       },
                       onRemove: () {
                         setState(() {
-                          if (_esJerukQty > 1) _esJerukQty--;
+                          if (esJerukQty > 1) esJerukQty--;
                         });
                       },
                     ),
@@ -123,7 +123,7 @@ class _DrinkViewState extends State<DrinkView> {
   }
 
   // Widget untuk membuat tampilan tiap minuman dengan gambar di kiri dan teks di kanan
-  Widget _buildDrinkItem({
+  Widget buildDrinkItem({
   required String imagePath,
   required String name,
   required String description,
@@ -143,7 +143,6 @@ class _DrinkViewState extends State<DrinkView> {
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
         Container(
           height: 190,
           width: 190,
@@ -187,7 +186,6 @@ class _DrinkViewState extends State<DrinkView> {
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
-                     
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.remove),
@@ -205,11 +203,9 @@ class _DrinkViewState extends State<DrinkView> {
                   Container(
                     width: 25,
                     height: 25,
-
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
-                     
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.add),

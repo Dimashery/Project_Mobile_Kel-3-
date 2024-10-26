@@ -24,73 +24,75 @@ class PaymentPageState extends State<PaymentPage> {  // Class sekarang public ta
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-
-            // Kotak merah tua di atas untuk "Payment" dan "Total"
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.red[800], // Warna merah tua
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Payment',
-                    style: TextStyle(fontSize: 40, color: Colors.white),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Total: Rp. 31.310',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 50),
-
-            const Text('Choose your preferred payment method', style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 20),
-
-            // Opsi metode pembayaran dengan tombol Radio di sebelah kanan
-            _buildPaymentOption('OVO', 'OVO'),
-            _buildPaymentOption('DANA', 'DANA Wallet'),
-            _buildPaymentOption('BCA Virtual Account', 'BCA'),
-
-            const Spacer(),
-
-            // Teks catatan di bawah metode pembayaran
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: Text(
-                "*Make sure your order is appropriate\n"
-                "*Make sure your payment method matches your choice",
-                style: TextStyle(color: Colors.grey),
-              ),
-            ),
-            const SizedBox(height: 70),
-
-            // Tombol "Pay Now"
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                 Get.toNamed(AppRoutes.TRANSACTION_SUCCESS); // Arahkan ke halaman transaksi berhasil
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 17),
-                  backgroundColor: Colors.black,
+      body: SingleChildScrollView( // Tambahkan SingleChildScrollView di sini
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 30),
+              // Kotak merah tua di atas untuk "Payment" dan "Total"
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.red[800], // Warna merah tua
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text('Pay Now', style: TextStyle(color: Colors.white)),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Payment',
+                      style: TextStyle(fontSize: 40, color: Colors.white),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Total: Rp. 31.310',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20), // Jarak tambahan di bagian bawah
-          ],
+              const SizedBox(height: 30),
+
+              const Text('Choose your preferred payment method', style: TextStyle(fontSize: 18)),
+              const SizedBox(height: 20),
+
+              // Opsi metode pembayaran dengan tombol Radio di sebelah kanan
+              _buildPaymentOption('OVO', 'OVO'),
+              _buildPaymentOption('DANA', 'DANA Wallet'),
+              _buildPaymentOption('BCA Virtual Account', 'BCA'),
+
+              const SizedBox(height: 20),
+
+              // Teks catatan di bawah metode pembayaran
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(
+                  "*Make sure your order is appropriate\n"
+                  "*Make sure your payment method matches your choice",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+              const SizedBox(height: 50),
+
+              // Tombol "Pay Now"
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                   Get.toNamed(AppRoutes.TRANSACTION_SUCCESS); // Arahkan ke halaman transaksi berhasil
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 17),
+                    backgroundColor: Colors.black,
+                  ),
+                  child: const Text('Pay Now', style: TextStyle(color: Colors.white)),
+                ),
+              ),
+              const SizedBox(height: 20), // Jarak tambahan di bagian bawah
+            ],
+          ),
         ),
       ),
     );

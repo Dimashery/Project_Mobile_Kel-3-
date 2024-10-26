@@ -9,36 +9,29 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(  // SafeArea added here
+    return SafeArea(
       child: Scaffold(
-        
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center, // Center-align content horizontally
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Profile Section (Centered)
+                // Profile Section
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.center, // Center-align vertically
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Circular Profile Picture
                     SizedBox(height: 30),
-
                     CircleAvatar(
-                      radius: 40, // Set radius for the circular profile picture
-                      backgroundImage: AssetImage('assets/images/profile.jpg'), // Replace with the actual image path
+                      radius: 40,
+                      backgroundImage: AssetImage('assets/images/profile.jpg'), // Ganti dengan path gambar profil yang sesuai
                     ),
-                    SizedBox(height: 10), // Space between profile picture and location
-
-                    // Location Text
+                    SizedBox(height: 10),
                     Text(
                       'Malang, Indonesia',
                       style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(height: 4),
-
-                    // Greeting Text
                     Text(
                       'Hi, Fulana',
                       style: TextStyle(
@@ -47,8 +40,6 @@ class HomeView extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20),
-
-                    // Start to Buy Button
                     ElevatedButton(
                       onPressed: () {
                         Get.toNamed(AppRoutes.START_TO_BUY);
@@ -57,144 +48,137 @@ class HomeView extends StatelessWidget {
                     ),
                   ],
                 ),
-
-                SizedBox(height: 10),
+                SizedBox(height: 20), // Space before Category section
 
                 // Category Section
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // Align Category text to the left
-                  children: [
-                    Text(
-                      'Category',
-                      style: TextStyle(
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    // Wrap Container with Expanded to allow it to take remaining space
-                    Container(
-                      height: 90,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          _buildCategoryItem('Food', Icons.fastfood, AppRoutes.FOOD),
-                          SizedBox(width: 20), // Add space between category items
-                          _buildCategoryItem('Drink', Icons.local_drink, AppRoutes.DRINK),
-                          SizedBox(width: 20), // Add space between category items
-                          _buildCategoryItem('Snack', Icons.restaurant_menu, AppRoutes.SNACK),
-                          SizedBox(width: 20), // Add space between category items
-                          _buildCategoryItem('Coffee', Icons.local_cafe, AppRoutes.COFFEE),
-                          SizedBox(width: 20), // Add space between category items
-                          _buildCategoryItem('Soft Drink', Icons.local_bar, AppRoutes.SOFT_DRINK),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                _buildCategorySection(),
+
                 SizedBox(height: 50),
 
                 // What's New Section
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
-                  children: [
-                    Text(
-                      'What\'s New?',
-                      style: TextStyle(
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      height: 250, // Tinggi untuk card produk
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          _buildProductItem('Kopi Tubruk', 'Rp. 12.000', 'Normal / Regular', 'assets/images/kopi_tubruk.jpg'),
-                          SizedBox(width: 30), // Spasi antar produk
-                          _buildProductItem('Es Taro', 'Rp. 15.000', 'Normal / Regular', 'assets/images/es_taro.jpg'),
-                          // Tambahkan produk lainnya jika perlu
-                        ],
-                      ),
-                    ),
+                _buildWhatsNewSection(),
 
-                  ],
-                ),
                 SizedBox(height: 50),
 
-
                 // Favorite Menu Section
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
-                  children: [
-                    SizedBox(height: 20), // Add space between "What's New?" and "Favorite Menu"
-                    Text(
-                      'Favorite Menu',
-                      style: TextStyle(
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      height: 250, // Same height as "What's New?" section for consistency
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          _buildProductItem('Tempe Mendoan', 'Rp. 10.000', 'Normal / Regular', 'assets/images/tempe_mendoan.jpg'),
-                          SizedBox(width: 20), // Add space between product items
-                          _buildProductItem('Nasi Goreng', 'Rp. 16.000', 'Normal / Regular', 'assets/images/nasi_goreng.jpg'),
-                          // Tambahkan produk lain sesuai kebutuhan
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                _buildFavoriteMenuSection(),
               ],
             ),
           ),
         ),
-
         bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0, // index aktif
-        
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Get.toNamed(AppRoutes.HOME);
-              break;
-
-            
-
+          currentIndex: 0, // Index aktif
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                Get.toNamed(AppRoutes.HOME);
+                break;
               case 2:
-              Get.toNamed(AppRoutes.MY_ORDER);
-              break;
-
+                Get.toNamed(AppRoutes.MY_ORDER);
+                break;
               case 3:
-              Get.toNamed(AppRoutes.PROFILE);
-              break;
-
-              /*
-            case 1:
-              Get.toNamed(AppRoutes.VOUCHER);
-              break;
-            case 3:
-              Get.toNamed(AppRoutes.PROFILE);
-              break;
-
-              */
-          }
-        },
-        
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black,), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.card_giftcard, color: Colors.black,), label: 'Voucher'),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart, color: Colors.black,), label: 'My Order'),
-          BottomNavigationBarItem(icon: Icon(Icons.person, color: Colors.black,), label: 'Profile'),
-        ],
+                Get.toNamed(AppRoutes.PROFILE);
+                break;
+            }
+          },
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.card_giftcard, color: Colors.black), label: 'Voucher'),
+            BottomNavigationBarItem(icon: Icon(Icons.shopping_cart, color: Colors.black), label: 'My Order'),
+            BottomNavigationBarItem(icon: Icon(Icons.person, color: Colors.black), label: 'Profile'),
+          ],
+        ),
       ),
-      ),
+    );
+  }
+
+  // Helper function to build Category section
+  Widget _buildCategorySection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Category',
+          style: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 20),
+        Container(
+          height: 90,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              _buildCategoryItem('Food', Icons.fastfood, AppRoutes.FOOD),
+              SizedBox(width: 20),
+              _buildCategoryItem('Drink', Icons.local_drink, AppRoutes.DRINK),
+              SizedBox(width: 20),
+              _buildCategoryItem('Snack', Icons.restaurant_menu, AppRoutes.SNACK),
+              SizedBox(width: 20),
+              _buildCategoryItem('Coffee', Icons.local_cafe, AppRoutes.COFFEE),
+              SizedBox(width: 20),
+              _buildCategoryItem('Soft Drink', Icons.local_bar, AppRoutes.SOFT_DRINK),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Helper function to build What's New section
+  Widget _buildWhatsNewSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'What\'s New?',
+          style: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 20),
+        Container(
+          height: 250,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              _buildProductItem('Kopi Tubruk', 'Rp. 12.000', 'Normal / Regular', 'assets/images/kopi_tubruk.jpg'),
+              SizedBox(width: 30),
+              _buildProductItem('Es Taro', 'Rp. 15.000', 'Normal / Regular', 'assets/images/es_taro.jpg'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Helper function to build Favorite Menu section
+  Widget _buildFavoriteMenuSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Favorite Menu',
+          style: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 20),
+        Container(
+          height: 250,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              _buildProductItem('Tempe Mendoan', 'Rp. 10.000', 'Normal / Regular', 'assets/images/tempe_mendoan.jpg'),
+              SizedBox(width: 20),
+              _buildProductItem('Nasi Goreng', 'Rp. 16.000', 'Normal / Regular', 'assets/images/nasi_goreng.jpg'),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -204,18 +188,15 @@ class HomeView extends StatelessWidget {
       onTap: () {
         Get.toNamed(route);
       },
-      
       child: Column(
         children: [
-          
           SizedBox(width: 70),
           CircleAvatar(
             radius: 30,
             child: Icon(icon, size: 28),
           ),
-          
           SizedBox(height: 10),
-          Text(title, style: TextStyle(fontWeight: FontWeight.bold),),
+          Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -223,50 +204,47 @@ class HomeView extends StatelessWidget {
 
   // Helper function to create Product items
   Widget _buildProductItem(String name, String price, String description, String imagePath) {
-  return Container(
-    width: 270, // Lebar untuk card produk
-    margin: EdgeInsets.only(right: 9),
-    child: Card(
-      elevation: 2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Gambar produk
-          Container(
-            height: 140,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(imagePath), // Menambahkan gambar produk
-                fit: BoxFit.cover,
+    return Container(
+      width: 270,
+      margin: EdgeInsets.only(right: 9),
+      child: Card(
+        elevation: 2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 140,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(imagePath),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Text(price, style: TextStyle(fontSize: 16,),),
-                Text(
-                  description,
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
+                  SizedBox(height: 10),
+                  Text(price, style: TextStyle(fontSize: 16)),
+                  Text(
+                    description,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }

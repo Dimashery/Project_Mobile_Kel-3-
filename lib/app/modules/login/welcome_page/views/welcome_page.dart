@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../routes/app_routes.dart';
- // Sesuaikan dengan path Anda
+// Sesuaikan dengan path Anda
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -10,7 +10,7 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
+        child: SingleChildScrollView( // Tambahkan SingleChildScrollView
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 100.0),
             child: Column(
@@ -20,7 +20,7 @@ class WelcomePage extends StatelessWidget {
                   "Hello, Customer :)",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                const Image(image: AssetImage('assets/images/logo/doi_coffee.png')),  // Sesuaikan path asset Anda
+                const Image(image: AssetImage('assets/images/logo/doi_coffee.png')), // Sesuaikan path asset Anda
                 Column(
                   children: [
                     const Column(
@@ -38,7 +38,7 @@ class WelcomePage extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.toNamed(AppRoutes.LOGIN_PAGE);  // Navigasi ke halaman login
+                        Get.toNamed(AppRoutes.LOGIN_PAGE); // Navigasi ke halaman login
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -59,7 +59,7 @@ class WelcomePage extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.toNamed(AppRoutes.SIGNUP_PAGE);  // Navigasi ke halaman sign up
+                        Get.toNamed(AppRoutes.SIGNUP_PAGE); // Navigasi ke halaman sign up
                       },
                       child: Container(
                         decoration: BoxDecoration(

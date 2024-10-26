@@ -6,12 +6,12 @@ class SnackView extends StatefulWidget {
   const SnackView({super.key});
 
   @override
-  SnackViewState createState() => SnackViewState(); // Make it public by removing the underscore
+  SnackViewState createState() => SnackViewState();
 }
 
-class SnackViewState extends State<SnackView> { // Change here
-  int _tempeMendoanQty = 1; // Quantity for Tempe Mendoan
-  int _kentangGorengQty = 1; // Quantity for Kentang Goreng
+class SnackViewState extends State<SnackView> {
+  int tempeMendoanQty = 1; // Quantity for Tempe Mendoan
+  int kentangGorengQty = 1; // Quantity for Kentang Goreng
 
   @override
   Widget build(BuildContext context) {
@@ -21,97 +21,96 @@ class SnackViewState extends State<SnackView> { // Change here
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Get.back(); // Navigasi ke halaman sebelumnya
+              Get.back();
             },
           ),
           title: LinearProgressIndicator(
-            value: 0.75, // Progress bar
+            value: 0.75,
             backgroundColor: Colors.grey[300],
             color: Colors.black,
           ),
           centerTitle: true,
           elevation: 0,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Snack's Menu",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Snack's Menu",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 60),
+                const SizedBox(height: 40),
 
-              Center(
-                child: Column(
-                  children: [
-                    // Tempe Mendoan Section
-                    _buildSnackItem(
-                      imagePath: 'assets/images/snack/tempe_mendoan.png', 
-                      name: 'Tempe Mendoan',
-                      description: 'Tempe Goreng Tepung',
-                      price: 'Rp. 10.000',
-                      quantity: _tempeMendoanQty,
-                      onAdd: () {
-                        setState(() {
-                          _tempeMendoanQty++;
-                        });
-                      },
-                      onRemove: () {
-                        setState(() {
-                          if (_tempeMendoanQty > 1) _tempeMendoanQty--;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 20),
+                // Snack items
+                Center(
+                  child: Column(
+                    children: [
+                      _buildSnackItem(
+                        imagePath: 'assets/images/snack/tempe_mendoan.png',
+                        name: 'Tempe Mendoan',
+                        description: 'Tempe Goreng Tepung',
+                        price: 'Rp. 10.000',
+                        quantity: tempeMendoanQty,
+                        onAdd: () {
+                          setState(() {
+                            tempeMendoanQty++;
+                          });
+                        },
+                        onRemove: () {
+                          setState(() {
+                            if (tempeMendoanQty > 1) tempeMendoanQty--;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 20),
 
-                    // Kentang Goreng Section
-                    _buildSnackItem(
-                      imagePath: 'assets/images/snack/kentang_goreng.png',
-                      name: 'Kentang Goreng',
-                      description: 'Kentang Goreng Renyah',
-                      price: 'Rp. 8.000',
-                      quantity: _kentangGorengQty,
-                      onAdd: () {
-                        setState(() {
-                          _kentangGorengQty++;
-                        });
-                      },
-                      onRemove: () {
-                        setState(() {
-                          if (_kentangGorengQty > 1) _kentangGorengQty--;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-              const Spacer(),
-              const SizedBox(height: 30),
-
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.toNamed(AppRoutes.START_TO_BUY); // Navigate back to Start_To_Buy page
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    textStyle: const TextStyle(fontSize: 15),
+                      _buildSnackItem(
+                        imagePath: 'assets/images/snack/kentang_goreng.png',
+                        name: 'Kentang Goreng',
+                        description: 'Kentang Goreng Renyah',
+                        price: 'Rp. 8.000',
+                        quantity: kentangGorengQty,
+                        onAdd: () {
+                          setState(() {
+                            kentangGorengQty++;
+                          });
+                        },
+                        onRemove: () {
+                          setState(() {
+                            if (kentangGorengQty > 1) kentangGorengQty--;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                  child: const Text('ADD TO MY ORDER', style: TextStyle(color: Colors.white)),
                 ),
-              ),
-              const SizedBox(height: 50),
-            ],
+                const SizedBox(height: 30),
+
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.toNamed(AppRoutes.START_TO_BUY);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      textStyle: const TextStyle(fontSize: 15),
+                    ),
+                    child: const Text('ADD TO MY ORDER', style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+                const SizedBox(height: 50),
+              ],
+            ),
           ),
         ),
       ),
@@ -128,8 +127,7 @@ class SnackViewState extends State<SnackView> { // Change here
     required VoidCallback onRemove,
   }) {
     return Container(
-      height: 250,
-      width: 1000,
+      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
         color: const Color.fromARGB(255, 243, 238, 197),
@@ -139,8 +137,8 @@ class SnackViewState extends State<SnackView> { // Change here
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 180,
-            width: 180,
+            width: MediaQuery.of(context).size.width * 0.3,
+            height: MediaQuery.of(context).size.width * 0.2, // Responsif lebar gambar
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(

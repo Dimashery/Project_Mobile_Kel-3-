@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_routes.dart'; // Sesuaikan dengan struktur proyek Anda
+import '../../../routes/app_routes.dart';
 
 class MyOrderPage extends StatelessWidget {
   const MyOrderPage({super.key});
@@ -12,130 +12,119 @@ class MyOrderPage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Get.back(); // Kembali ke halaman sebelumnya
+            Get.back();
           },
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-
-            const SizedBox(height: 30),
-            // Kotak abu-abu di atas
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[300], // Warna abu-abu
-                borderRadius: BorderRadius.circular(8),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 30),
+              // Kotak abu-abu di atas
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'MyOrder (2)',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    Text('Your Location:'),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on, color: Colors.red),
+                        Text('Jl. Sengkaling, Malang'),
+                      ],
+                    ),
+                  ],
+                ),
               ),
+              const SizedBox(height: 20),
               
+              _buildOrderItem(
+                context, // Meneruskan context
+                'Indomie Goreng',
+                'Rp. 15.000',
+                'assets/images/food/indomie_goreng.png',
+              ),
+              const SizedBox(height: 10),
+              _buildOrderItem(
+                context, // Meneruskan context
+                'Nasi Goreng',
+                'Rp. 16.000',
+                'assets/images/food/nasi_goreng.png',
+              ),
+              const SizedBox(height: 30),
 
-
-              
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                
-                
+              // Divider dengan tanda tambah
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    
-                    'MyOrder (2)',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 10),
-                  Text('Your Location:'),
-                  Row(
-                    children: [
-                      Icon(Icons.location_on, color: Colors.red),
-                      Text('Jl. Sengkaling, Malang'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20), // Jarak setelah kotak
-
-            
-            const SizedBox(height: 25),
-
-            _buildOrderItem(
-              'Indomie Goreng',
-              'Rp. 15.000',
-              'assets/images/food/indomie_goreng.png', // Ganti dengan path gambar yang sesuai
-            ),
-            const SizedBox(height: 10),
-            _buildOrderItem(
-              'Nasi Goreng',
-              'Rp. 16.000',
-              'assets/images/food/nasi_goreng.png', // Ganti dengan path gambar yang sesuai
-            ),
-            const SizedBox(height: 50),
-             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(child: Divider(thickness: 1, color: Colors.black)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      // Tindakan ketika tombol (+) ditekan
-                      Get.toNamed(AppRoutes.START_TO_BUY2); // Arahkan ke halaman StartToBuy2
-                    },
-                    child: const CircleAvatar(
-                      backgroundColor: Colors.green,
-                      child: Icon(Icons.add, color: Colors.white), // Ikon +
+                  const Expanded(child: Divider(thickness: 1, color: Colors.black)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.toNamed(AppRoutes.START_TO_BUY2);
+                      },
+                      child: const CircleAvatar(
+                        backgroundColor: Colors.green,
+                        child: Icon(Icons.add, color: Colors.white),
+                      ),
                     ),
                   ),
-                ),
-                const Expanded(child: Divider(thickness: 1, color: Colors.black)),
-              ],
-            ),
-            // Tanda (+) untuk menambah pesanan (hapus karena sudah ditambahkan di atas)
-            // Center(
-            //   child: IconButton(
-            //     icon: const Icon(Icons.add_circle, color: Colors.green, size: 40),
-            //     onPressed: () {
-            //       Get.toNamed(AppRoutes.START_TO_BUY2); // Arahkan ke halaman StartToBuy2
-            //     },
-            //   ),
-            // ),
-
-            const SizedBox(height: 50),
-            _buildTotalSummary(),
-            const SizedBox(height: 100),
-
-            // Tombol Check Out
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-            
-                  Get.toNamed(AppRoutes.PAYMENT); // Arahkan ke halaman Payment
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 20),
-                  backgroundColor: Colors.black,
-                ),
-                child: const Text('Check Out', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  const Expanded(child: Divider(thickness: 1, color: Colors.black)),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 30),
+
+              _buildTotalSummary(),
+              const SizedBox(height: 50),
+
+              // Tombol Check Out
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.toNamed(AppRoutes.PAYMENT);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 20),
+                    backgroundColor: Colors.black,
+                  ),
+                  child: const Text('Check Out', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(height: 50),
+            ],
+          ),
         ),
       ),
     );
   }
 
   // Fungsi untuk membuat item pesanan
-  Widget _buildOrderItem(String name, String price, String imagePath) {
+  Widget _buildOrderItem(BuildContext context, String name, String price, String imagePath) {
     return Row(
       children: [
-        Image.asset(
-          imagePath,
-          width: 60,
-          height: 60,
-          fit: BoxFit.contain,
+        Container(
+          width: MediaQuery.of(context).size.width * 0.2, // Lebar gambar responsif
+          height: MediaQuery.of(context).size.width * 0.2,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
         const SizedBox(width: 10),
         Expanded(

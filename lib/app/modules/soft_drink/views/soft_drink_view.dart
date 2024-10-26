@@ -6,12 +6,12 @@ class SoftDrinkView extends StatefulWidget {
   const SoftDrinkView({super.key});
 
   @override
-  SoftDrinkViewState createState() => SoftDrinkViewState(); // Change to public
+  SoftDrinkViewState createState() => SoftDrinkViewState();
 }
 
-class SoftDrinkViewState extends State<SoftDrinkView> { // Change here
-  int _cocaColaQty = 1; // Quantity for Coca Cola
-  int _spriteQty = 1;   // Quantity for Sprite
+class SoftDrinkViewState extends State<SoftDrinkView> {
+  int cocaColaQty = 1; // Quantity for Coca Cola
+  int spriteQty = 1;   // Quantity for Sprite
 
   @override
   Widget build(BuildContext context) {
@@ -21,97 +21,97 @@ class SoftDrinkViewState extends State<SoftDrinkView> { // Change here
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Get.back(); // Navigate back to the previous page
+              Get.back();
             },
           ),
           title: LinearProgressIndicator(
-            value: 1.0, // Progress bar
+            value: 1.0,
             backgroundColor: Colors.grey[300],
             color: Colors.black,
           ),
           centerTitle: true,
           elevation: 0,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Soft Drink's Menu",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Soft Drink's Menu",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 60),
+                const SizedBox(height: 40),
 
-              Center(
-                child: Column(
-                  children: [
-                    // Coca Cola Section
-                    _buildSoftDrinkItem(
-                      imagePath: 'assets/images/soft_drink/coca_cola.png',
-                      name: 'Coca Cola',
-                      description: 'Minuman ringan bersoda',
-                      price: 'Rp. 8.000',
-                      quantity: _cocaColaQty,
-                      onAdd: () {
-                        setState(() {
-                          _cocaColaQty++;
-                        });
-                      },
-                      onRemove: () {
-                        setState(() {
-                          if (_cocaColaQty > 1) _cocaColaQty--;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 20),
+                Center(
+                  child: Column(
+                    children: [
+                      // Coca Cola Section
+                      _buildSoftDrinkItem(
+                        imagePath: 'assets/images/soft_drink/coca_cola.png',
+                        name: 'Coca Cola',
+                        description: 'Minuman ringan bersoda',
+                        price: 'Rp. 8.000',
+                        quantity: cocaColaQty,
+                        onAdd: () {
+                          setState(() {
+                            cocaColaQty++;
+                          });
+                        },
+                        onRemove: () {
+                          setState(() {
+                            if (cocaColaQty > 1) cocaColaQty--;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 20),
 
-                    // Sprite Section
-                    _buildSoftDrinkItem(
-                      imagePath: 'assets/images/soft_drink/fanta.png',
-                      name: 'Fanta',
-                      description: 'Minuman ringan bersoda dengan rasa Jeruk',
-                      price: 'Rp. 7.000',
-                      quantity: _spriteQty,
-                      onAdd: () {
-                        setState(() {
-                          _spriteQty++;
-                        });
-                      },
-                      onRemove: () {
-                        setState(() {
-                          if (_spriteQty > 1) _spriteQty--;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-              const Spacer(),
-              const SizedBox(height: 30),
-
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.toNamed(AppRoutes.START_TO_BUY); // Navigate to Start_To_Buy page
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    textStyle: const TextStyle(fontSize: 15),
+                      // Sprite Section
+                      _buildSoftDrinkItem(
+                        imagePath: 'assets/images/soft_drink/fanta.png',
+                        name: 'Fanta',
+                        description: 'Minuman ringan bersoda dengan rasa Jeruk',
+                        price: 'Rp. 7.000',
+                        quantity: spriteQty,
+                        onAdd: () {
+                          setState(() {
+                            spriteQty++;
+                          });
+                        },
+                        onRemove: () {
+                          setState(() {
+                            if (spriteQty > 1) spriteQty--;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                  child: const Text('ADD TO MY ORDER', style: TextStyle(color: Colors.white)),
                 ),
-              ),
-              const SizedBox(height: 50),
-            ],
+                const SizedBox(height: 30),
+
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.toNamed(AppRoutes.START_TO_BUY);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      textStyle: const TextStyle(fontSize: 15),
+                    ),
+                    child: const Text('ADD TO MY ORDER', style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+                const SizedBox(height: 50),
+              ],
+            ),
           ),
         ),
       ),
@@ -128,8 +128,7 @@ class SoftDrinkViewState extends State<SoftDrinkView> { // Change here
     required VoidCallback onRemove,
   }) {
     return Container(
-      height: 250,
-      width: double.infinity, // Adjusted width to fit the screen
+      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
         color: const Color.fromARGB(255, 243, 238, 197),
@@ -139,8 +138,8 @@ class SoftDrinkViewState extends State<SoftDrinkView> { // Change here
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 200,
-            width: 200,
+            width: MediaQuery.of(context).size.width * 0.3,
+            height: MediaQuery.of(context).size.width * 0.2, // Lebar responsif gambar
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(

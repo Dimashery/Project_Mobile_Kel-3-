@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_routes.dart';
-
+import '../conrtrollers/check_order_controller.dart';
+// Import controller yang telah dibuat
 
 class CheckOrderPage extends StatelessWidget {
   const CheckOrderPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final CheckOrderController controller = Get.put(CheckOrderController());
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -17,9 +19,7 @@ class CheckOrderPage extends StatelessWidget {
             children: [
               // Baris atas: tombol kembali dan judul
               GestureDetector(
-                onTap: () {
-                  Get.back(); // Kembali ke halaman sebelumnya
-                },
+                onTap: controller.goBack, // Menggunakan metode dari controller
                 child: const Icon(Icons.arrow_back),
               ),
               const SizedBox(height: 24),
@@ -34,9 +34,9 @@ class CheckOrderPage extends StatelessWidget {
               const SizedBox(height: 40),
 
               // Status pesanan
-              const Text(
-                "Ongoing",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                controller.getOrderStatus(), // Menggunakan metode dari controller
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
 
@@ -50,7 +50,7 @@ class CheckOrderPage extends StatelessWidget {
                     width: 1.0,
                   ),
                 ),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
@@ -58,36 +58,35 @@ class CheckOrderPage extends StatelessWidget {
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: const [
                             Text(
                               "BCA Virtual Account",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                             SizedBox(height: 4),
                             Text("BCA"),
                           ],
                         ),
-                        Text("19:30"),
+                        const Text("19:30"),
                       ],
                     ),
-                    Divider(thickness: 1, height: 24),
-                    Text("1 x Indomie Goreng...............................Rp.15.000"),
-                    Text("1 x Nasi Goreng....................................Rp.16.000"),
-                    SizedBox(height: 16),
+                    const Divider(thickness: 1, height: 24),
+                    const Text("1 x Indomie Goreng...............................Rp.15.000"),
+                    const Text("1 x Nasi Goreng....................................Rp.16.000"),
+                    const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
-                          children: [
+                          children: const [
                             Icon(Icons.location_on, color: Colors.red),
                             SizedBox(width: 4),
                             Text("Jl. Sengkaling, Malang"),
                           ],
                         ),
                         Text(
-                          "Total : Rp. 31.310",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          "Total : ${controller.getTotalOrder()}", // Menggunakan metode dari controller
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -102,8 +101,7 @@ class CheckOrderPage extends StatelessWidget {
                   children: [
                     Text("Want to add more orders?"),
                     SizedBox(height: 20),
-                    // Tombol Buy Again
-                    BuyAgainButton(),
+                    BuyAgainButton(), // Tombol dibisakan sebagai widget terpisah
                   ],
                 ),
               ),
@@ -122,10 +120,10 @@ class BuyAgainButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final CheckOrderController controller = Get.find(); // Mengambil instance controller yang sama
+
     return GestureDetector(
-      onTap: () {
-        Get.offNamed(AppRoutes.START_TO_BUY); // Navigasi kembali ke Home
-      },
+      onTap: controller.buyAgain, // Menggunakan metode dari controller
       child: Container(
         width: 200,
         height: 50,

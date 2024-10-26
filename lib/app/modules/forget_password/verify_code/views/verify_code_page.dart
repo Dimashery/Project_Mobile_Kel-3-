@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../routes/app_routes.dart';
- // Sesuaikan dengan path yang Anda gunakan
+import '../controllers/verify_code_controller.dart'; // Import controller
 
 class VerifyCodePage extends StatelessWidget {
-  final TextEditingController codeController1 = TextEditingController();
-  final TextEditingController codeController2 = TextEditingController();
-  final TextEditingController codeController3 = TextEditingController();
-  final TextEditingController codeController4 = TextEditingController();
-
   VerifyCodePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final VerifyCodeController controller = Get.put(VerifyCodeController()); // Menginisialisasi controller
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -24,16 +20,12 @@ class VerifyCodePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Get.toNamed(AppRoutes.FORGET_PASSWORD);  // Menggunakan GetX untuk kembali
-                    },
+                    onTap: controller.goToForgetPasswordPage, // Menggunakan metode dari controller
                     child: const Icon(Icons.arrow_back),
                   ),
                   const Image(width: 100, image: AssetImage('assets/images/logo/doi_coffee.png')), // Sesuaikan path logo
                   GestureDetector(
-                    onTap: () {
-                      Get.toNamed(AppRoutes.LOGIN_PAGE);  // Navigasi ke halaman Login
-                    },
+                    onTap: controller.goToLoginPage, // Navigasi ke halaman Login
                     child: const Text(
                       "Sign In!",
                       style: TextStyle(decoration: TextDecoration.underline),
@@ -62,19 +54,17 @@ class VerifyCodePage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildCodeBox(codeController1),
-                  _buildCodeBox(codeController2),
-                  _buildCodeBox(codeController3),
-                  _buildCodeBox(codeController4),
+                  _buildCodeBox(controller.codeController1),
+                  _buildCodeBox(controller.codeController2),
+                  _buildCodeBox(controller.codeController3),
+                  _buildCodeBox(controller.codeController4),
                 ],
               ),
               const SizedBox(height: 70),
 
               // Button "Verify The Code"
               GestureDetector(
-                onTap: () {
-                  Get.offNamed(AppRoutes.CHANGE_PASSWORD);  // Arahkan ke halaman Change Password
-                },
+                onTap: controller.verifyCode, // Menggunakan metode dari controller
                 child: Container(
                   width: 300,
                   height: 50,
@@ -94,9 +84,7 @@ class VerifyCodePage extends StatelessWidget {
 
               // Back to Login link
               GestureDetector(
-                onTap: () {
-                  Get.offNamed(AppRoutes.LOGIN_PAGE);  // Navigasi kembali ke halaman Login
-                },
+                onTap: controller.goToLoginPage, // Menggunakan metode dari controller
                 child: const Text(
                   "Back to Login",
                   style: TextStyle(decoration: TextDecoration.underline),

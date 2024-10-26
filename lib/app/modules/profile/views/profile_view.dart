@@ -1,23 +1,24 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/profile_controller.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ProfileController controller = Get.put(ProfileController()); // Menginisialisasi controller
+
     // Mengambil ukuran layar untuk responsivitas
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Get.toNamed('/home');
-          },
+          onPressed: controller.goBack,
         ),
       ),
       body: SingleChildScrollView(
@@ -29,19 +30,25 @@ class ProfileView extends StatelessWidget {
               // Profile Section
               Row(
                 children: [
-                  CircleAvatar(
-                    radius: screenWidth * 0.08, // Ukuran avatar berdasarkan lebar layar
-                    backgroundColor: Colors.grey[300], // Placeholder avatar
-                    child: const Icon(Icons.person, size: 40, color: Colors.white),
-                  ),
+                  Obx(() => GestureDetector(
+                    onTap: () {
+                      controller.pickImage(); // Memanggil metode untuk memilih gambar
+                    },
+                    child: CircleAvatar(
+                      radius: screenWidth * 0.08, // Ukuran avatar berdasarkan lebar layar
+                      backgroundColor: Colors.grey[300], // Placeholder avatar
+                      backgroundImage: controller.profileImage.value.isNotEmpty
+                          ? FileImage(File(controller.profileImage.value)) // Menampilkan gambar jika ada
+                          : const AssetImage('assets/images/default_avatar.png'), // Placeholder gambar jika tidak ada
+                    ),
+                  )),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
                         'FULANA PUTRI ANDRIANI',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
                       Text('📍 Malang, Indonesia',
@@ -71,57 +78,39 @@ class ProfileView extends StatelessWidget {
               // List of Menu Items
               ListTile(
                 title: const Text('Your Order'),
-                onTap: () {
-                  Get.toNamed('/check-order');
-                },
+                onTap: () => controller.navigateTo('/check-order'),
               ),
               ListTile(
                 title: const Text('Favorite Menu'),
-                onTap: () {
-                  Get.toNamed('/favorite');
-                },
+                onTap: () => controller.navigateTo('/favorite'),
               ),
               ListTile(
                 title: const Text('History'),
-                onTap: () {
-                  Get.toNamed('/history');
-                },
+                onTap: () => controller.navigateTo('/history'),
               ),
               ListTile(
                 title: const Text('Language'),
-                onTap: () {
-                  Get.toNamed('/language');
-                },
+                onTap: () => controller.navigateTo('/language'),
               ),
               ListTile(
                 title: const Text('Notification'),
-                onTap: () {
-                  Get.toNamed('/notification');
-                },
+                onTap: () => controller.navigateTo('/notification'),
               ),
               ListTile(
                 title: const Text('Account Security'),
-                onTap: () {
-                  Get.toNamed('/account_security');
-                },
+                onTap: () => controller.navigateTo('/account_security'),
               ),
               ListTile(
                 title: const Text('Invite Your Get Free Voucher'),
-                onTap: () {
-                  Get.toNamed('/free_voucher');
-                },
+                onTap: () => controller.navigateTo('/free_voucher'),
               ),
               ListTile(
                 title: const Text('Give Us Rating'),
-                onTap: () {
-                  Get.toNamed('/give_rating');
-                },
+                onTap: () => controller.navigateTo('/give_rating'),
               ),
               ListTile(
                 title: const Text('Account Settings'),
-                onTap: () {
-                  Get.toNamed('/account_settings');
-                },
+                onTap: () => controller.navigateTo('/account_settings'),
               ),
             ],
           ),

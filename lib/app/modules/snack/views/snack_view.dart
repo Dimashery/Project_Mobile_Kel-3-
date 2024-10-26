@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_routes.dart';
+import '../controllers/snack_controller.dart';
 
-class SnackView extends StatefulWidget {
+class SnackView extends StatelessWidget {
   const SnackView({super.key});
 
   @override
-  SnackViewState createState() => SnackViewState();
-}
-
-class SnackViewState extends State<SnackView> {
-  int tempeMendoanQty = 1; // Quantity for Tempe Mendoan
-  int kentangGorengQty = 1; // Quantity for Kentang Goreng
-
-  @override
   Widget build(BuildContext context) {
+    // Mendapatkan instance controller
+    final SnackController controller = Get.put(SnackController());
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -54,42 +50,28 @@ class SnackViewState extends State<SnackView> {
                 Center(
                   child: Column(
                     children: [
-                      _buildSnackItem(
+                      Obx(() => _buildSnackItem(
+                        context,
                         imagePath: 'assets/images/snack/tempe_mendoan.png',
                         name: 'Tempe Mendoan',
                         description: 'Tempe Goreng Tepung',
                         price: 'Rp. 10.000',
-                        quantity: tempeMendoanQty,
-                        onAdd: () {
-                          setState(() {
-                            tempeMendoanQty++;
-                          });
-                        },
-                        onRemove: () {
-                          setState(() {
-                            if (tempeMendoanQty > 1) tempeMendoanQty--;
-                          });
-                        },
-                      ),
+                        quantity: controller.tempeMendoanQty.value,
+                        onAdd: controller.incrementTempeMendoan,
+                        onRemove: controller.decrementTempeMendoan,
+                      )),
                       const SizedBox(height: 20),
 
-                      _buildSnackItem(
+                      Obx(() => _buildSnackItem(
+                        context,
                         imagePath: 'assets/images/snack/kentang_goreng.png',
                         name: 'Kentang Goreng',
                         description: 'Kentang Goreng Renyah',
                         price: 'Rp. 8.000',
-                        quantity: kentangGorengQty,
-                        onAdd: () {
-                          setState(() {
-                            kentangGorengQty++;
-                          });
-                        },
-                        onRemove: () {
-                          setState(() {
-                            if (kentangGorengQty > 1) kentangGorengQty--;
-                          });
-                        },
-                      ),
+                        quantity: controller.kentangGorengQty.value,
+                        onAdd: controller.incrementKentangGoreng,
+                        onRemove: controller.decrementKentangGoreng,
+                      )),
                     ],
                   ),
                 ),
@@ -117,7 +99,8 @@ class SnackViewState extends State<SnackView> {
     );
   }
 
-  Widget _buildSnackItem({
+  Widget _buildSnackItem(
+    BuildContext context, {
     required String imagePath,
     required String name,
     required String description,

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../routes/app_routes.dart';
- // Sesuaikan dengan path yang Anda gunakan
+import '../controllers/forget_password_controller.dart'; // Import controller
 
 class ForgetPasswordPage extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-
   ForgetPasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ForgetPasswordController controller = Get.put(ForgetPasswordController()); // Menginisialisasi controller
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -21,16 +20,12 @@ class ForgetPasswordPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Get.toNamed(AppRoutes.LOGIN_PAGE);  // Menggunakan GetX untuk kembali
-                    },
+                    onTap: controller.goToLoginPage, // Menggunakan metode dari controller
                     child: const Icon(Icons.arrow_back),
                   ),
                   const Image(width: 100, image: AssetImage('assets/images/logo/doi_coffee.png')), // Sesuaikan path logo
                   GestureDetector(
-                    onTap: () {
-                      Get.toNamed(AppRoutes.LOGIN_PAGE);  // Navigasi ke halaman Login
-                    },
+                    onTap: controller.goToLoginPage, // Navigasi ke halaman Login
                     child: const Text(
                       "Sign In!",
                       style: TextStyle(decoration: TextDecoration.underline),
@@ -65,7 +60,7 @@ class ForgetPasswordPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: emailController,  // Controller for email
+                controller: controller.emailController, // Menggunakan controller dari GetX
                 decoration: InputDecoration(
                   hintText: 'Enter your Email',
                   border: OutlineInputBorder(
@@ -77,10 +72,7 @@ class ForgetPasswordPage extends StatelessWidget {
 
               // Button "Continue"
               GestureDetector(
-                onTap: () {
-                  // Navigate to Verify Code Page
-                  Get.offNamed(AppRoutes.VERIFY_CODE);
-                },
+                onTap: controller.continueToVerifyCode, // Menggunakan metode dari controller
                 child: Container(
                   width: 300,
                   height: 50,
@@ -100,9 +92,7 @@ class ForgetPasswordPage extends StatelessWidget {
 
               // Back to Login link
               GestureDetector(
-                onTap: () {
-                  Get.offNamed(AppRoutes.LOGIN_PAGE);  // Navigasi kembali ke halaman Login
-                },
+                onTap: controller.goToLoginPage, // Menggunakan metode dari controller
                 child: const Text(
                   "Back to Login",
                   style: TextStyle(decoration: TextDecoration.underline),

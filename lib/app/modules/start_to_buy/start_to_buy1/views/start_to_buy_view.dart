@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../routes/app_routes.dart'; // Ganti sesuai dengan struktur proyek
+import '../../../../routes/app_routes.dart';
+import '../controllers/start_to_buy_controller.dart';
 
 class StartToBuyView extends StatelessWidget {
   const StartToBuyView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Mengambil instance dari StartToBuyController
+    final StartToBuyController controller = Get.put(StartToBuyController());
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -46,11 +50,11 @@ class StartToBuyView extends StatelessWidget {
                 crossAxisSpacing: 16.0,
                 childAspectRatio: 1.2,
                 children: [
-                  _buildCategoryButton('Food', Icons.fastfood, AppRoutes.FOOD),
-                  _buildCategoryButton('Drink', Icons.local_drink, AppRoutes.DRINK),
-                  _buildCategoryButton('Snack', Icons.restaurant_menu, AppRoutes.SNACK),
-                  _buildCategoryButton('Coffee', Icons.local_cafe, AppRoutes.COFFEE),
-                  _buildCategoryButton('Soft Drink', Icons.local_bar, AppRoutes.SOFT_DRINK),
+                  _buildCategoryButton(controller, 'Food', Icons.fastfood, AppRoutes.FOOD),
+                  _buildCategoryButton(controller, 'Drink', Icons.local_drink, AppRoutes.DRINK),
+                  _buildCategoryButton(controller, 'Snack', Icons.restaurant_menu, AppRoutes.SNACK),
+                  _buildCategoryButton(controller, 'Coffee', Icons.local_cafe, AppRoutes.COFFEE),
+                  _buildCategoryButton(controller, 'Soft Drink', Icons.local_bar, AppRoutes.SOFT_DRINK),
                 ],
               ),
             ),
@@ -58,13 +62,12 @@ class StartToBuyView extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Get.toNamed(AppRoutes.MY_ORDER);
+                controller.navigateTo(AppRoutes.MY_ORDER);
                 // Action for continue button if needed
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
-                  
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
@@ -73,40 +76,26 @@ class StartToBuyView extends StatelessWidget {
                 child: Text('Continue', style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
             ),
-             const SizedBox(height: 40),
+            const SizedBox(height: 40),
           ],
         ),
       ),
       // Bottom navigation bar
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0, // index aktif
-        
         onTap: (index) {
           switch (index) {
             case 0:
-              Get.toNamed(AppRoutes.HOME);
+              controller.navigateTo(AppRoutes.HOME);
               break;
-
-              case 2:
-              Get.toNamed(AppRoutes.MY_ORDER);
-              break;
-
-              case 3:
-              Get.toNamed(AppRoutes.PROFILE);
-              break;
-              
-              /*
-            case 1:
-              Get.toNamed(AppRoutes.VOUCHER);
+            case 2:
+              controller.navigateTo(AppRoutes.MY_ORDER);
               break;
             case 3:
-              Get.toNamed(AppRoutes.PROFILE);
+              controller.navigateTo(AppRoutes.PROFILE);
               break;
-
-              */
           }
         },
-        
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black,), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.card_giftcard, color: Colors.black,), label: 'Voucher'),
@@ -118,10 +107,10 @@ class StartToBuyView extends StatelessWidget {
   }
 
   // Helper function for building category buttons
-  Widget _buildCategoryButton(String label, IconData icon, String route) {
+  Widget _buildCategoryButton(StartToBuyController controller, String label, IconData icon, String route) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed(route); // Navigate to the respective page
+        controller.navigateTo(route); // Navigate to the respective page
       },
       child: Container(
         decoration: BoxDecoration(

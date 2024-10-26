@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_routes.dart';
+import '../controllers/food_controller.dart';
 
-class FoodView extends StatefulWidget {
+class FoodView extends StatelessWidget {
   const FoodView({super.key});
 
   @override
-  FoodViewState createState() => FoodViewState();
-}
-
-class FoodViewState extends State<FoodView> {
-  int indomieGorengQty = 1; // Quantity for Indomie Goreng
-  int nasiGorengQty = 1;    // Quantity for Nasi Goreng
-
-  @override
   Widget build(BuildContext context) {
-    // Mengambil ukuran layar untuk responsivitas
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    // Mendapatkan instance controller
+    final FoodController controller = Get.put(FoodController());
 
     return SafeArea(
       child: Scaffold(
@@ -56,52 +47,36 @@ class FoodViewState extends State<FoodView> {
                 const SizedBox(height: 40),
 
                 // Indomie Goreng Section
-                buildFoodItem(
-                  imagePath: 'assets/images/food/indomie_goreng.png', // Pastikan path ini benar
+                Obx(() => buildFoodItem(
+                  context, // Pass context here
+                  imagePath: 'assets/images/food/indomie_goreng.png',
                   name: 'Indomie Goreng',
                   description: 'Indomie Goreng dengan Telur',
                   price: 'Rp. 15.000',
-                  quantity: indomieGorengQty,
-                  onAdd: () {
-                    setState(() {
-                      indomieGorengQty++;
-                    });
-                  },
-                  onRemove: () {
-                    setState(() {
-                      if (indomieGorengQty > 1) indomieGorengQty--;
-                    });
-                  },
-                ),
+                  quantity: controller.indomieGorengQty.value,
+                  onAdd: controller.addIndomieGoreng,
+                  onRemove: controller.removeIndomieGoreng,
+                )),
                 const SizedBox(height: 20),
 
                 // Nasi Goreng Section
-                buildFoodItem(
-                  imagePath: 'assets/images/food/nasi_goreng.png', // Perbaiki path ini
+                Obx(() => buildFoodItem(
+                  context, // Pass context here
+                  imagePath: 'assets/images/food/nasi_goreng.png',
                   name: 'Nasi Goreng',
                   description: 'Nasi Goreng dengan Telur',
                   price: 'Rp. 16.000',
-                  quantity: nasiGorengQty,
-                  onAdd: () {
-                    setState(() {
-                      nasiGorengQty++;
-                    });
-                  },
-                  onRemove: () {
-                    setState(() {
-                      if (nasiGorengQty > 1) nasiGorengQty--;
-                    });
-                  },
-                ),
+                  quantity: controller.nasiGorengQty.value,
+                  onAdd: controller.addNasiGoreng,
+                  onRemove: controller.removeNasiGoreng,
+                )),
 
                 const SizedBox(height: 30),
 
                 // Tombol ADD TO MY ORDER
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.START_TO_BUY);
-                    },
+                    onPressed: controller.goToStartToBuy,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -123,7 +98,8 @@ class FoodViewState extends State<FoodView> {
   }
 
   // Widget untuk membuat tampilan tiap makanan dengan gambar di kiri dan teks di kanan
-  Widget buildFoodItem({
+  Widget buildFoodItem(
+    BuildContext context, { // Add BuildContext parameter
     required String imagePath,
     required String name,
     required String description,

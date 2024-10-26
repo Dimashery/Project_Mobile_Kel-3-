@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_routes.dart';
+import '../controllers/coffee_controller.dart';
 
-class CoffeeView extends StatefulWidget {
+class CoffeeView extends StatelessWidget {
   const CoffeeView({super.key});
 
   @override
-  CoffeeViewState createState() => CoffeeViewState();
-}
-
-class CoffeeViewState extends State<CoffeeView> {
-  int kopiTubrukQty = 1; // Quantity for Kopi Tubruk
-  int esTaroQty = 1;     // Quantity for Es Taro
-
-  @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    // Mendapatkan instance controller
+    final CoffeeController controller = Get.put(CoffeeController());
 
     return SafeArea(
       child: Scaffold(
@@ -55,43 +48,29 @@ class CoffeeViewState extends State<CoffeeView> {
                 const SizedBox(height: 40),
 
                 // Kopi Tubruk Section
-                buildCoffeeItem(
+                Obx(() => buildCoffeeItem(
+                  context,
                   imagePath: 'assets/images/coffee/kopi_tubruk.png',
                   name: 'Kopi Tubruk',
                   description: 'Kopi Tubruk dengan rempah-rempah',
                   price: 'Rp. 7.000',
-                  quantity: kopiTubrukQty,
-                  onAdd: () {
-                    setState(() {
-                      kopiTubrukQty++;
-                    });
-                  },
-                  onRemove: () {
-                    setState(() {
-                      if (kopiTubrukQty > 1) kopiTubrukQty--;
-                    });
-                  },
-                ),
+                  quantity: controller.kopiTubrukQty.value,
+                  onAdd: controller.incrementKopiTubruk,
+                  onRemove: controller.decrementKopiTubruk,
+                )),
                 const SizedBox(height: 20),
 
                 // Es Taro Section
-                buildCoffeeItem(
+                Obx(() => buildCoffeeItem(
+                  context,
                   imagePath: 'assets/images/coffee/cappucino.png',
                   name: 'Cappucino',
                   description: 'Cappucino dengan cream dan manis yang pas',
                   price: 'Rp. 10.000',
-                  quantity: esTaroQty,
-                  onAdd: () {
-                    setState(() {
-                      esTaroQty++;
-                    });
-                  },
-                  onRemove: () {
-                    setState(() {
-                      if (esTaroQty > 1) esTaroQty--;
-                    });
-                  },
-                ),
+                  quantity: controller.esTaroQty.value,
+                  onAdd: controller.incrementEsTaro,
+                  onRemove: controller.decrementEsTaro,
+                )),
                 const SizedBox(height: 30),
 
                 // Tombol ADD TO MY ORDER
@@ -121,7 +100,8 @@ class CoffeeViewState extends State<CoffeeView> {
   }
 
   // Widget untuk membuat tampilan tiap minuman dengan gambar di kiri dan teks di kanan
-  Widget buildCoffeeItem({
+  Widget buildCoffeeItem(
+    BuildContext context, {
     required String imagePath,
     required String name,
     required String description,

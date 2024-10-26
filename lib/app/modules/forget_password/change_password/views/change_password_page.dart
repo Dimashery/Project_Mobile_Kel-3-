@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../routes/app_routes.dart';
+import '../controllers/change_password_controller.dart'; // Import controller
 
 class ChangePasswordPage extends StatelessWidget {
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-
   ChangePasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ChangePasswordController controller = Get.put(ChangePasswordController()); // Menginisialisasi controller
+
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView( // Tambahkan SingleChildScrollView
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -22,16 +21,12 @@ class ChangePasswordPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        Get.toNamed(AppRoutes.VERIFY_CODE); // Menggunakan GetX untuk kembali
-                      },
+                      onTap: controller.goToVerifyCodePage, // Menggunakan metode dari controller
                       child: const Icon(Icons.arrow_back),
                     ),
                     const Image(width: 100, image: AssetImage('assets/images/logo/doi_coffee.png')), // Sesuaikan path logo
                     GestureDetector(
-                      onTap: () {
-                        Get.toNamed(AppRoutes.LOGIN_PAGE); // Navigasi ke halaman Login
-                      },
+                      onTap: controller.goToLoginPage, // Navigasi ke halaman Login
                       child: const Text(
                         "Sign In!",
                         style: TextStyle(decoration: TextDecoration.underline),
@@ -60,9 +55,9 @@ class ChangePasswordPage extends StatelessWidget {
 
                 // Input "New Password"
                 TextField(
-                  controller: newPasswordController,
+                  controller: controller.newPasswordController, // Menggunakan controller
                   obscureText: true,
-                  maxLength: 10, // Batas maksimal 10 karakter
+                  maxLength: 10,
                   decoration: InputDecoration(
                     hintText: 'Enter your New Password',
                     border: OutlineInputBorder(
@@ -84,9 +79,9 @@ class ChangePasswordPage extends StatelessWidget {
 
                 // Input "Confirm Password"
                 TextField(
-                  controller: confirmPasswordController,
+                  controller: controller.confirmPasswordController, // Menggunakan controller
                   obscureText: true,
-                  maxLength: 10, // Batas maksimal 10 karakter
+                  maxLength: 10,
                   decoration: InputDecoration(
                     hintText: 'Re-enter your Password',
                     border: OutlineInputBorder(
@@ -107,11 +102,9 @@ class ChangePasswordPage extends StatelessWidget {
 
                 // Tombol "Continue"
                 GestureDetector(
-                  onTap: () {
-                    Get.offNamed(AppRoutes.PASSWORD_CHANGED); // Navigasi ke halaman Password Changed
-                  },
+                  onTap: controller.changePassword, // Menggunakan metode dari controller
                   child: Container(
-                    width: double.infinity, // Menggunakan double.infinity agar bisa responsif
+                    width: double.infinity,
                     height: 50,
                     decoration: BoxDecoration(
                       color: Colors.black,
@@ -129,9 +122,7 @@ class ChangePasswordPage extends StatelessWidget {
 
                 // Back to Login link
                 GestureDetector(
-                  onTap: () {
-                    Get.offNamed(AppRoutes.LOGIN_PAGE); // Navigasi kembali ke halaman Login
-                  },
+                  onTap: controller.goToLoginPage, // Menggunakan metode dari controller
                   child: const Text(
                     "Back to Login",
                     style: TextStyle(decoration: TextDecoration.underline),

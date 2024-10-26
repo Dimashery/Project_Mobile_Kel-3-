@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_routes.dart'; // Sesuaikan dengan struktur proyek Anda
+import '../controllers/payment_controller.dart'; // Import controller yang telah dibuat
 
-class PaymentPage extends StatefulWidget {
+class PaymentPage extends StatelessWidget {
   const PaymentPage({super.key});
 
   @override
-  PaymentPageState createState() => PaymentPageState();  // Ubah nama class menjadi public
-}
-
-class PaymentPageState extends State<PaymentPage> {  // Class sekarang public tanpa underscore
-  String? selectedPaymentMethod; // Menyimpan metode pembayaran yang dipilih
-
-  @override
   Widget build(BuildContext context) {
+    // Mengambil instance dari PaymentController
+    final PaymentController controller = Get.put(PaymentController());
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -24,7 +20,7 @@ class PaymentPageState extends State<PaymentPage> {  // Class sekarang public ta
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView( // Tambahkan SingleChildScrollView di sini
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -39,17 +35,17 @@ class PaymentPageState extends State<PaymentPage> {  // Class sekarang public ta
                   color: Colors.red[800], // Warna merah tua
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Payment',
                       style: TextStyle(fontSize: 40, color: Colors.white),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
-                      'Total: Rp. 31.310',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                      'Total: ${controller.getTotal()}',
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ],
                 ),
@@ -60,9 +56,9 @@ class PaymentPageState extends State<PaymentPage> {  // Class sekarang public ta
               const SizedBox(height: 20),
 
               // Opsi metode pembayaran dengan tombol Radio di sebelah kanan
-              _buildPaymentOption('OVO', 'OVO'),
-              _buildPaymentOption('DANA', 'DANA Wallet'),
-              _buildPaymentOption('BCA Virtual Account', 'BCA'),
+              _buildPaymentOption(controller, 'OVO', 'OVO'),
+              _buildPaymentOption(controller, 'DANA', 'DANA Wallet'),
+              _buildPaymentOption(controller, 'BCA Virtual Account', 'BCA'),
 
               const SizedBox(height: 20),
 
@@ -81,7 +77,7 @@ class PaymentPageState extends State<PaymentPage> {  // Class sekarang public ta
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                   Get.toNamed(AppRoutes.TRANSACTION_SUCCESS); // Arahkan ke halaman transaksi berhasil
+                    controller.confirmPayment(); // Memanggil metode konfirmasi pembayaran
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 17),
@@ -99,37 +95,39 @@ class PaymentPageState extends State<PaymentPage> {  // Class sekarang public ta
   }
 
   // Fungsi untuk membuat opsi metode pembayaran
-  Widget _buildPaymentOption(String paymentMethod, String description) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10), // Jarak antar opsi pembayaran
-      decoration: BoxDecoration(
-        border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)), // Garis tepi
-        borderRadius: BorderRadius.circular(17),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            title: Text(paymentMethod),
-            trailing: Radio<String>(
-              value: paymentMethod,
-              groupValue: selectedPaymentMethod, // Mengatur metode pembayaran yang dipilih
-              onChanged: (value) {
-                setState(() {
-                  selectedPaymentMethod = value; // Menyimpan metode yang dipilih
-                });
-              },
-            ),
+  Widget _buildPaymentOption(PaymentController controller, String paymentMethod, String description) {
+    return GetBuilder<PaymentController>(
+      builder: (controller) {
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 10), // Jarak antar opsi pembayaran
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)), // Garis tepi
+            borderRadius: BorderRadius.circular(17),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Text(
-              description,
-              style: const TextStyle(color: Colors.grey), // Deskripsi dengan warna abu-abu
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                title: Text(paymentMethod),
+                trailing: Radio<String>(
+                  value: paymentMethod,
+                  groupValue: controller.selectedPaymentMethod, // Mengatur metode pembayaran yang dipilih
+                  onChanged: (value) {
+                    controller.selectPaymentMethod(value); // Menyimpan metode yang dipilih
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Text(
+                  description,
+                  style: const TextStyle(color: Colors.grey), // Deskripsi dengan warna abu-abu
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

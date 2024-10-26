@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../routes/app_routes.dart';
+import '../controllers/sign_up_controller.dart'; // Import controller yang telah dibuat
 
 class SignUpPage extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
   SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final SignUpController controller = Get.put(SignUpController()); // Menginisialisasi controller
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView( // Tambahkan SingleChildScrollView
@@ -18,20 +16,34 @@ class SignUpPage extends StatelessWidget {
             padding: const EdgeInsets.all(24.0),
             child: Column(
               children: [
+                // Notifikasi Snackbar
+                Obx(() {
+                  if (controller.snackbarMessage.isNotEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Text(
+                        controller.snackbarMessage.value,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    );
+                  }
+                  return Container(); // Kembali ke kosong jika tidak ada pesan
+                }),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        Get.back(); // Menggunakan GetX untuk kembali
-                      },
+                      onTap: controller.goBack, // Menggunakan metode dari controller
                       child: const Icon(Icons.arrow_back),
                     ),
                     const Image(width: 100, image: AssetImage('assets/images/logo/doi_coffee.png')), // Sesuaikan path logo
                     GestureDetector(
-                      onTap: () {
-                        Get.toNamed(AppRoutes.LOGIN_PAGE); // Navigasi ke halaman Login
-                      },
+                      onTap: controller.goToLoginPage, // Menggunakan metode dari controller
                       child: const Text(
                         "Sign In!",
                         style: TextStyle(decoration: TextDecoration.underline),
@@ -54,7 +66,7 @@ class SignUpPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 TextField(
-                  controller: emailController, // Menggunakan controller dari GetX
+                  controller: controller.emailController, // Menggunakan controller dari GetX
                   decoration: InputDecoration(
                     hintText: 'Enter your Email',
                     hintStyle: const TextStyle(color: Colors.grey),
@@ -70,7 +82,7 @@ class SignUpPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 TextField(
-                  controller: usernameController, // Menggunakan controller dari GetX
+                  controller: controller.usernameController, // Menggunakan controller dari GetX
                   maxLength: 15, // Batas maksimal username adalah 15 karakter
                   decoration: InputDecoration(
                     hintText: 'Enter your New Username',
@@ -87,7 +99,7 @@ class SignUpPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 TextField(
-                  controller: passwordController, // Menggunakan controller dari GetX
+                  controller: controller.passwordController, // Menggunakan controller dari GetX
                   maxLength: 10, // Batas maksimal password adalah 10 karakter
                   obscureText: true, // Password disensor dengan tanda *
                   decoration: InputDecoration(
@@ -99,9 +111,7 @@ class SignUpPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 36),
                 GestureDetector(
-                  onTap: () {
-                    Get.toNamed(AppRoutes.SIGNUP_SUCCESS_PAGE); // Navigasi ke halaman sukses Sign Up
-                  },
+                  onTap: controller.signUp, // Menggunakan metode dari controller
                   child: Container(
                     width: double.infinity, // Menggunakan double.infinity agar bisa responsif
                     height: 50,

@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_routes.dart';
+import '../controllers/soft_drink_controller.dart';
 
-class SoftDrinkView extends StatefulWidget {
+class SoftDrinkView extends StatelessWidget {
   const SoftDrinkView({super.key});
 
   @override
-  SoftDrinkViewState createState() => SoftDrinkViewState();
-}
-
-class SoftDrinkViewState extends State<SoftDrinkView> {
-  int cocaColaQty = 1; // Quantity for Coca Cola
-  int spriteQty = 1;   // Quantity for Sprite
-
-  @override
   Widget build(BuildContext context) {
+    // Mengambil instance dari SoftDrinkController
+    final SoftDrinkController controller = Get.put(SoftDrinkController());
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -54,43 +50,29 @@ class SoftDrinkViewState extends State<SoftDrinkView> {
                   child: Column(
                     children: [
                       // Coca Cola Section
-                      _buildSoftDrinkItem(
+                      Obx(() => _buildSoftDrinkItem(
+                        context,
                         imagePath: 'assets/images/soft_drink/coca_cola.png',
                         name: 'Coca Cola',
                         description: 'Minuman ringan bersoda',
                         price: 'Rp. 8.000',
-                        quantity: cocaColaQty,
-                        onAdd: () {
-                          setState(() {
-                            cocaColaQty++;
-                          });
-                        },
-                        onRemove: () {
-                          setState(() {
-                            if (cocaColaQty > 1) cocaColaQty--;
-                          });
-                        },
-                      ),
+                        quantity: controller.cocaColaQty.value,
+                        onAdd: controller.incrementCocaCola,
+                        onRemove: controller.decrementCocaCola,
+                      )),
                       const SizedBox(height: 20),
 
                       // Sprite Section
-                      _buildSoftDrinkItem(
+                      Obx(() => _buildSoftDrinkItem(
+                        context,
                         imagePath: 'assets/images/soft_drink/fanta.png',
                         name: 'Fanta',
                         description: 'Minuman ringan bersoda dengan rasa Jeruk',
                         price: 'Rp. 7.000',
-                        quantity: spriteQty,
-                        onAdd: () {
-                          setState(() {
-                            spriteQty++;
-                          });
-                        },
-                        onRemove: () {
-                          setState(() {
-                            if (spriteQty > 1) spriteQty--;
-                          });
-                        },
-                      ),
+                        quantity: controller.spriteQty.value,
+                        onAdd: controller.incrementSprite,
+                        onRemove: controller.decrementSprite,
+                      )),
                     ],
                   ),
                 ),
@@ -118,7 +100,9 @@ class SoftDrinkViewState extends State<SoftDrinkView> {
     );
   }
 
-  Widget _buildSoftDrinkItem({
+  // Widget untuk membuat tampilan tiap minuman dengan gambar di kiri dan teks di kanan
+  Widget _buildSoftDrinkItem(
+    BuildContext context, {
     required String imagePath,
     required String name,
     required String description,
@@ -171,7 +155,7 @@ class SoftDrinkViewState extends State<SoftDrinkView> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Buttons to add/remove below price
+                // Tombol tambah/kurang di bawah harga
                 Row(
                   children: [
                     Container(

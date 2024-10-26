@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_routes.dart';
+import '../controllers/drink_controller.dart';
 
-class DrinkView extends StatefulWidget {
+class DrinkView extends StatelessWidget {
   const DrinkView({super.key});
 
   @override
-  DrinkViewState createState() => DrinkViewState();
-}
-
-class DrinkViewState extends State<DrinkView> {
-  int esTehQty = 1; // Quantity for Es Teh
-  int esJerukQty = 1; // Quantity for Es Jeruk
-
-  @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    // Mendapatkan instance controller
+    final DrinkController controller = Get.put(DrinkController());
 
     return SafeArea(
       child: Scaffold(
@@ -55,43 +48,29 @@ class DrinkViewState extends State<DrinkView> {
                 const SizedBox(height: 40),
 
                 // Es Teh Section
-                buildDrinkItem(
+                Obx(() => buildDrinkItem(
+                  context, // Pass the context here
                   imagePath: 'assets/images/drink/es_teh.png',
                   name: 'Es Teh',
                   description: 'Es Teh Manis Dingin',
                   price: 'Rp. 5.000',
-                  quantity: esTehQty,
-                  onAdd: () {
-                    setState(() {
-                      esTehQty++;
-                    });
-                  },
-                  onRemove: () {
-                    setState(() {
-                      if (esTehQty > 1) esTehQty--;
-                    });
-                  },
-                ),
+                  quantity: controller.esTehQty.value,
+                  onAdd: controller.incrementEsTeh,
+                  onRemove: controller.decrementEsTeh,
+                )),
                 const SizedBox(height: 20),
 
                 // Es Jeruk Section
-                buildDrinkItem(
+                Obx(() => buildDrinkItem(
+                  context, // Pass the context here
                   imagePath: 'assets/images/drink/es_jeruk.png',
                   name: 'Es Jeruk',
                   description: 'Es Jeruk Segar',
                   price: 'Rp. 7.000',
-                  quantity: esJerukQty,
-                  onAdd: () {
-                    setState(() {
-                      esJerukQty++;
-                    });
-                  },
-                  onRemove: () {
-                    setState(() {
-                      if (esJerukQty > 1) esJerukQty--;
-                    });
-                  },
-                ),
+                  quantity: controller.esJerukQty.value,
+                  onAdd: controller.incrementEsJeruk,
+                  onRemove: controller.decrementEsJeruk,
+                )),
 
                 const SizedBox(height: 30),
 
@@ -122,7 +101,8 @@ class DrinkViewState extends State<DrinkView> {
   }
 
   // Widget untuk membuat tampilan tiap minuman dengan gambar di kiri dan teks di kanan
-  Widget buildDrinkItem({
+  Widget buildDrinkItem(
+    BuildContext context, { // Add context parameter
     required String imagePath,
     required String name,
     required String description,
@@ -142,8 +122,8 @@ class DrinkViewState extends State<DrinkView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: MediaQuery.of(context).size.width * 0.3, 
-            height: MediaQuery.of(context).size.width * 0.2,// Gambar responsif
+            width: MediaQuery.of(context).size.width * 0.3,
+            height: MediaQuery.of(context).size.width * 0.2, // Gambar responsif
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(

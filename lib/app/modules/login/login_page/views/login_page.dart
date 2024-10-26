@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../routes/app_routes.dart'; // Sesuaikan dengan path yang Anda gunakan
+import '../controllers/login_controller.dart';
+
 
 class LoginPage extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final LoginController controller = Get.put(LoginController());
 
   LoginPage({super.key});
 
@@ -12,7 +12,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView( // Tambahkan SingleChildScrollView di sini
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -24,11 +24,9 @@ class LoginPage extends StatelessWidget {
                     const Image(
                       width: 100,
                       image: AssetImage('assets/images/logo/doi_coffee.png'),
-                    ), // Sesuaikan path logo
+                    ),
                     GestureDetector(
-                      onTap: () {
-                        Get.toNamed(AppRoutes.SIGNUP_PAGE); // Navigasi ke Sign Up
-                      },
+                      onTap: controller.goToSignup,
                       child: const Text(
                         "Sign Up!",
                         style: TextStyle(decoration: TextDecoration.underline),
@@ -44,15 +42,14 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                
-                // Username field
+
                 const Text(
                   "Username",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 TextField(
-                  controller: usernameController,
+                  controller: controller.usernameController,
                   maxLength: 15,
                   decoration: InputDecoration(
                     hintText: 'Enter your Username',
@@ -63,14 +60,13 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
 
-                // Password field
                 const Text(
                   "Password",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 TextField(
-                  controller: passwordController,
+                  controller: controller.passwordController,
                   maxLength: 10,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -82,12 +78,9 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 36),
 
-                // Continue button
                 Center(
                   child: GestureDetector(
-                    onTap: () {
-                      Get.offNamed(AppRoutes.HOME); // Navigasi ke halaman Home
-                    },
+                    onTap: controller.login,
                     child: Container(
                       width: double.infinity,
                       height: 50,
@@ -106,12 +99,9 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
 
-                // Forget password
                 Center(
                   child: GestureDetector(
-                    onTap: () {
-                      Get.offNamed(AppRoutes.FORGET_PASSWORD); // Navigasi ke Forget Password
-                    },
+                    onTap: controller.goToForgetPassword,
                     child: const Text(
                       "Forget Password",
                       style: TextStyle(decoration: TextDecoration.underline),

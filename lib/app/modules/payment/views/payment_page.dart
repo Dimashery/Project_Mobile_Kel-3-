@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/payment_controller.dart'; // Import controller yang telah dibuat
+import '../controllers/payment_controller.dart';
 
 class PaymentPage extends StatelessWidget {
   const PaymentPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Mengambil instance dari PaymentController
     final PaymentController controller = Get.put(PaymentController());
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Get.back(); // Kembali ke halaman sebelumnya
-          },
+          onPressed: () => Get.back(),
         ),
         centerTitle: true,
       ),
@@ -27,12 +24,12 @@ class PaymentPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              // Kotak merah tua di atas untuk "Payment" dan "Total"
+              // Kotak total
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.red[800], // Warna merah tua
+                  color: Colors.red[800],
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
@@ -45,48 +42,42 @@ class PaymentPage extends StatelessWidget {
                     const SizedBox(height: 10),
                     Text(
                       'Total: ${controller.getTotal()}',
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 30),
-
-              const Text('Choose your preferred payment method', style: TextStyle(fontSize: 18)),
+              const Text('Choose your preferred payment method',
+                  style: TextStyle(fontSize: 18)),
               const SizedBox(height: 20),
-
-              // Opsi metode pembayaran dengan tombol Radio di sebelah kanan
               _buildPaymentOption(controller, 'OVO', 'OVO'),
               _buildPaymentOption(controller, 'DANA', 'DANA Wallet'),
               _buildPaymentOption(controller, 'BCA Virtual Account', 'BCA'),
-
-              const SizedBox(height: 20),
-
-              // Teks catatan di bawah metode pembayaran
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
-                child: Text(
-                  "*Make sure your order is appropriate\n"
-                  "*Make sure your payment method matches your choice",
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ),
               const SizedBox(height: 50),
-
-              // Tombol "Pay Now"
+              // In your payment page where you handle the payment confirmation
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    controller.confirmPayment(); // Memanggil metode konfirmasi pembayaran
+                    // Assume you have access to the orderId here
+                    String orderId =
+                        "your_order_id"; // Replace with actual order ID
+                    controller.confirmPayment(orderId); // Pass the orderId
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 17),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 17),
                     backgroundColor: Colors.black,
                   ),
-                  child: const Text('Pay Now', style: TextStyle(color: Colors.white)),
+                  child: const Text('Pay Now',
+                      style: TextStyle(color: Colors.white)),
                 ),
               ),
-              const SizedBox(height: 20), // Jarak tambahan di bagian bawah
+
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -94,14 +85,14 @@ class PaymentPage extends StatelessWidget {
     );
   }
 
-  // Fungsi untuk membuat opsi metode pembayaran
-  Widget _buildPaymentOption(PaymentController controller, String paymentMethod, String description) {
+  Widget _buildPaymentOption(
+      PaymentController controller, String paymentMethod, String description) {
     return GetBuilder<PaymentController>(
       builder: (controller) {
         return Container(
-          margin: const EdgeInsets.symmetric(vertical: 10), // Jarak antar opsi pembayaran
+          margin: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)), // Garis tepi
+            border: Border.all(color: Colors.black),
             borderRadius: BorderRadius.circular(17),
           ),
           child: Column(
@@ -111,18 +102,17 @@ class PaymentPage extends StatelessWidget {
                 title: Text(paymentMethod),
                 trailing: Radio<String>(
                   value: paymentMethod,
-                  groupValue: controller.selectedPaymentMethod, // Mengatur metode pembayaran yang dipilih
+                  groupValue: controller.selectedPaymentMethod,
                   onChanged: (value) {
-                    controller.selectPaymentMethod(value); // Menyimpan metode yang dipilih
+                    controller.selectPaymentMethod(value);
                   },
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Text(
-                  description,
-                  style: const TextStyle(color: Colors.grey), // Deskripsi dengan warna abu-abu
-                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Text(description,
+                    style: const TextStyle(color: Colors.grey)),
               ),
             ],
           ),

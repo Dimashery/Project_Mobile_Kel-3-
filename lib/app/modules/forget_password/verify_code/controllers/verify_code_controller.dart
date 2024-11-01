@@ -1,40 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../../../../routes/app_routes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class VerifyCodeController extends GetxController {
-  final TextEditingController codeController1 = TextEditingController();
-  final TextEditingController codeController2 = TextEditingController();
-  final TextEditingController codeController3 = TextEditingController();
-  final TextEditingController codeController4 = TextEditingController();
+class VerifyOTPController {
+  final List<TextEditingController> otpControllers = List.generate(5, (_) => TextEditingController());
+  DateTime? lastResendTime; // Menyimpan waktu terakhir pengiriman ulang OTP
 
-  // Method untuk memverifikasi kode
-  void verifyCode() {
-    String code = codeController1.text +
-        codeController2.text +
-        codeController3.text +
-        codeController4.text;
+  Future<void> verifyOTP(BuildContext context, String email) async {
+    String enteredOTP = otpControllers.map((c) => c.text).join();
 
-    if (code.length < 4) {
-      Get.snackbar(
-        'Error',
-        'Please enter the complete 4-digit code',
-        snackPosition: SnackPosition.TOP,
-      );
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('otp').doc(email).get();
+      String savedOTP = snapshot.get('otp');
+
+      if (enteredOTP == savedOTP) {
+        Navigator.pushNamed(context, '/change-password', arguments: email);
+      } else {
+        showTopSnackBar(context, 'Invalid OTP');
+      }
+    } catch (e) {
+      print(e);
+      showTopSnackBar(context, 'An error occurred. Please try again.');
+    }
+  }
+
+  Future<void> resendOTP(BuildContext context, String email) async {
+    // Cek apakah 10 detik telah berlalu sejak pengiriman terakhir
+    if (lastResendTime != null && DateTime.now().difference(lastResendTime!).inSeconds < 10) {
+      showTopSnackBar(context, 'Please wait for 10 seconds before requesting a new OTP.');
       return;
     }
 
-    // Jika kode benar, navigasi ke halaman Change Password
-    Get.offNamed(AppRoutes.CHANGE_PASSWORD);
+    // Menghasilkan OTP baru
+    String newOtp = (10000 + (99999 - 10000) * (DateTime.now().millisecond / 1000)).toStringAsFixed(0);
+    await FirebaseFirestore.instance.collection('otp').doc(email).update({'otp': newOtp});
+
+    // Simpan waktu pengiriman terakhir
+    lastResendTime = DateTime.now();
+
+    // Tampilkan snackbar dengan OTP baru
+    showTopSnackBar(context, 'A new OTP has been sent: $newOtp');
   }
 
-  // Method untuk kembali ke halaman Forget Password
-  void goToForgetPasswordPage() {
-    Get.offNamed(AppRoutes.FORGET_PASSWORD);
-  }
-
-  // Method untuk kembali ke halaman Login
-  void goToLoginPage() {
-    Get.offNamed(AppRoutes.LOGIN_PAGE);
+  void showTopSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: MediaQuery.of(context).size.height - 100),
+        duration: Duration(seconds: 8),
+      ),
+    );
   }
 }

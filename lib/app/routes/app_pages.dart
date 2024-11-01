@@ -55,14 +55,15 @@ class AppPages {
     GetPage(name: AppRoutes.PAGE_START, page: () => const PageStart()),
     GetPage(name: AppRoutes.WELCOME_PAGE, page: () => const WelcomePage()),
     GetPage(name: AppRoutes.LOGIN_PAGE, page: () => LoginPage()),
+    // ignore: prefer_const_constructors
     GetPage(name: AppRoutes.SIGNUP_PAGE, page: () => SignUpPage()),
     GetPage(name: AppRoutes.SIGNUP_SUCCESS_PAGE, page: () => const SignUpSuccessPage()),
 
     
-    GetPage(name: AppRoutes.FORGET_PASSWORD,page: () => ForgetPasswordPage(),),
-    GetPage(name: AppRoutes.VERIFY_CODE,page: () => VerifyCodePage(),),
-    GetPage(name: AppRoutes.CHANGE_PASSWORD,page: () => ChangePasswordPage(),),
-    GetPage(name: AppRoutes.PASSWORD_CHANGED,page: () => const PasswordChangedPage(),),
+    GetPage(name: AppRoutes.FORGET_PASSWORD,page: () => EnterEmailView(),),
+    GetPage(name: AppRoutes.VERIFY_CODE,page: () => VerifyOTPView(),),
+    GetPage(name: AppRoutes.CHANGE_PASSWORD,page: () => NewPasswordView(),),
+    GetPage(name: AppRoutes.PASSWORD_CHANGED,page: () => PasswordChangedScreen(),),
 
 
     GetPage(name: AppRoutes.HOME, page: () => const HomeView()),

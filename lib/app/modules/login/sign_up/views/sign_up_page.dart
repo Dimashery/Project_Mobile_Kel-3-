@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/sign_up_controller.dart'; // Import controller yang telah dibuat
+import '../controllers/sign_up_controller.dart';
 
 class SignUpPage extends StatelessWidget {
-  SignUpPage({super.key});
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final SignUpController controller = Get.put(SignUpController()); // Menginisialisasi controller
+    final SignUpController controller = Get.put(SignUpController());
 
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView( // Tambahkan SingleChildScrollView
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -31,19 +31,19 @@ class SignUpPage extends StatelessWidget {
                       ),
                     );
                   }
-                  return Container(); // Kembali ke kosong jika tidak ada pesan
+                  return Container();
                 }),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: controller.goBack, // Menggunakan metode dari controller
+                      onTap: controller.goBack,
                       child: const Icon(Icons.arrow_back),
                     ),
-                    const Image(width: 100, image: AssetImage('assets/images/logo/doi_coffee.png')), // Sesuaikan path logo
+                    const Image(width: 100, image: AssetImage('assets/images/logo/doi_coffee.png')),
                     GestureDetector(
-                      onTap: controller.goToLoginPage, // Menggunakan metode dari controller
+                      onTap: controller.goToLoginPage,
                       child: const Text(
                         "Sign In!",
                         style: TextStyle(decoration: TextDecoration.underline),
@@ -56,64 +56,47 @@ class SignUpPage extends StatelessWidget {
                   'Sign Up Account',
                   style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                 ),
-                const Text("Please fill in the data below",
-                    style: TextStyle(color: Colors.grey)),
+                const Text("Please fill in the data below", style: TextStyle(color: Colors.grey)),
                 const SizedBox(height: 40),
+                
+                // Input Email
                 const Align(
                   alignment: Alignment.topLeft,
-                  child: Text("Email",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  child: Text("Email", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 8),
                 TextField(
-                  controller: controller.emailController, // Menggunakan controller dari GetX
+                  controller: controller.emailController,
                   decoration: InputDecoration(
                     hintText: 'Enter your Email',
                     hintStyle: const TextStyle(color: Colors.grey),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(40)),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(40)),
                   ),
                 ),
                 const SizedBox(height: 24),
+                
+                // Input Password
                 const Align(
                   alignment: Alignment.topLeft,
-                  child: Text("New Username",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  child: Text("New Password", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 8),
                 TextField(
-                  controller: controller.usernameController, // Menggunakan controller dari GetX
-                  maxLength: 15, // Batas maksimal username adalah 15 karakter
-                  decoration: InputDecoration(
-                    hintText: 'Enter your New Username',
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(40)),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                const Align(
-                  alignment: Alignment.topLeft,
-                  child: Text("New Password",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: controller.passwordController, // Menggunakan controller dari GetX
-                  maxLength: 10, // Batas maksimal password adalah 10 karakter
-                  obscureText: true, // Password disensor dengan tanda *
+                  controller: controller.passwordController,
+                  obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Enter your New Password',
                     hintStyle: const TextStyle(color: Colors.grey),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(40)),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(40)),
                   ),
                 ),
                 const SizedBox(height: 36),
+                
+                // Tombol Sign Up
                 GestureDetector(
-                  onTap: controller.signUp, // Menggunakan metode dari controller
+                  onTap: controller.signUp,
                   child: Container(
-                    width: double.infinity, // Menggunakan double.infinity agar bisa responsif
+                    width: double.infinity,
                     height: 50,
                     decoration: BoxDecoration(
                         color: Colors.black,

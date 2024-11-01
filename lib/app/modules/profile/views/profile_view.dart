@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/profile_controller.dart';
@@ -8,7 +7,8 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ProfileController controller = Get.put(ProfileController()); // Menginisialisasi controller
+    final ProfileController controller =
+        Get.put(ProfileController()); // Menginisialisasi controller
 
     // Mengambil ukuran layar untuk responsivitas
     final screenWidth = MediaQuery.of(context).size.width;
@@ -31,24 +31,28 @@ class ProfileView extends StatelessWidget {
               Row(
                 children: [
                   Obx(() => GestureDetector(
-                    onTap: () {
-                      controller.pickImage(); // Memanggil metode untuk memilih gambar
-                    },
-                    child: CircleAvatar(
-                      radius: screenWidth * 0.08, // Ukuran avatar berdasarkan lebar layar
-                      backgroundColor: Colors.grey[300], // Placeholder avatar
-                      backgroundImage: controller.profileImage.value.isNotEmpty
-                          ? FileImage(File(controller.profileImage.value)) // Menampilkan gambar jika ada
-                          : const AssetImage('assets/images/default_avatar.png'), // Placeholder gambar jika tidak ada
-                    ),
-                  )),
+                        onTap: () {
+                          controller.pickImage();
+                        },
+                        child: CircleAvatar(
+                          radius: screenWidth * 0.08,
+                          backgroundColor: Colors.grey[300],
+                          backgroundImage: controller
+                                  .profileImageUrl.value.isNotEmpty
+                              ? NetworkImage(controller.profileImageUrl.value)
+                              : const AssetImage(
+                                      'assets/images/default_avatar.png')
+                                  as ImageProvider,
+                        ),
+                      )),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
                         'FULANA PUTRI ANDRIANI',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
                       Text('📍 Malang, Indonesia',
@@ -71,7 +75,9 @@ class ProfileView extends StatelessWidget {
               const Text(
                 'MyAccount',
                 style: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
               ),
               const SizedBox(height: 15),
 

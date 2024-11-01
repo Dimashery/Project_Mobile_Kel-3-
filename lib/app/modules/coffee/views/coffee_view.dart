@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_routes.dart';
 import '../controllers/coffee_controller.dart';
 
 class CoffeeView extends StatelessWidget {
@@ -8,7 +7,6 @@ class CoffeeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mendapatkan instance controller
     final CoffeeController controller = Get.put(CoffeeController());
 
     return SafeArea(
@@ -17,11 +15,11 @@ class CoffeeView extends StatelessWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Get.back(); // Navigasi ke halaman sebelumnya
+              Get.back();
             },
           ),
           title: LinearProgressIndicator(
-            value: 0.7, // Progress bar
+            value: 0.7,
             backgroundColor: Colors.grey[300],
             color: Colors.black,
           ),
@@ -34,7 +32,6 @@ class CoffeeView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Judul menu kopi
                 const Align(
                   alignment: Alignment.center,
                   child: Text(
@@ -60,25 +57,23 @@ class CoffeeView extends StatelessWidget {
                 )),
                 const SizedBox(height: 20),
 
-                // Es Taro Section
+                // Cappucino Section
                 Obx(() => buildCoffeeItem(
                   context,
                   imagePath: 'assets/images/coffee/cappucino.png',
                   name: 'Cappucino',
                   description: 'Cappucino dengan cream dan manis yang pas',
                   price: 'Rp. 10.000',
-                  quantity: controller.esTaroQty.value,
-                  onAdd: controller.incrementEsTaro,
-                  onRemove: controller.decrementEsTaro,
+                  quantity: controller.cappucinoQty.value,
+                  onAdd: controller.incrementCappucino,
+                  onRemove: controller.decrementCappucino,
                 )),
                 const SizedBox(height: 30),
 
                 // Tombol ADD TO MY ORDER
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.START_TO_BUY);
-                    },
+                    onPressed: controller.addToMyOrder, // Menggunakan method untuk menambahkan pesanan
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -99,7 +94,6 @@ class CoffeeView extends StatelessWidget {
     );
   }
 
-  // Widget untuk membuat tampilan tiap minuman dengan gambar di kiri dan teks di kanan
   Widget buildCoffeeItem(
     BuildContext context, {
     required String imagePath,
@@ -122,7 +116,7 @@ class CoffeeView extends StatelessWidget {
         children: [
           Container(
             width: MediaQuery.of(context).size.width * 0.3,
-            height: MediaQuery.of(context).size.width * 0.2, // Lebar gambar responsif
+            height: MediaQuery.of(context).size.width * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
@@ -154,7 +148,6 @@ class CoffeeView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Tombol tambah/kurang di bawah harga
                 Row(
                   children: [
                     Container(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import '../../../../routes/app_routes.dart';
 
 class SignUpController extends GetxController {
@@ -11,27 +12,35 @@ class SignUpController extends GetxController {
   // Variabel untuk menyimpan pesan notifikasi
   var snackbarMessage = ''.obs;
 
+  // Instance FirebaseAuth
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   // Method untuk melakukan pendaftaran
-  void signUp() {
+  void signUp() async {
     // Dapatkan input dari controller
     String email = emailController.text;
-    String username = usernameController.text;
     String password = passwordController.text;
 
     // Validasi input (contoh sederhana)
-    if (email.isEmpty || username.isEmpty || password.isEmpty) {
+    if (email.isEmpty || password.isEmpty) {
       snackbarMessage.value = 'Please fill in all fields';
-      Get.snackbar('Error', snackbarMessage.value,
-          snackPosition: SnackPosition.TOP);
+      Get.snackbar('Error', snackbarMessage.value, snackPosition: SnackPosition.TOP);
       return;
     }
 
-    // Jika semua validasi lolos, arahkan ke halaman sukses
-    snackbarMessage.value = 'Sign Up Successful!';
-    Get.snackbar('Success', snackbarMessage.value,
-        snackPosition: SnackPosition.TOP);
-    
-    Get.toNamed(AppRoutes.SIGNUP_SUCCESS_PAGE);
+    try {
+      // Firebase Sign Up dengan Email dan Password
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      
+      // Jika berhasil, arahkan ke halaman login atau halaman sukses
+      snackbarMessage.value = 'Sign Up Successful!';
+      Get.snackbar('Success', snackbarMessage.value, snackPosition: SnackPosition.TOP);
+      
+      Get.offNamed(AppRoutes.LOGIN_PAGE); // Redirect ke halaman login
+    } catch (e) {
+      snackbarMessage.value = 'Sign Up Failed: ${e.toString()}';
+      Get.snackbar('Error', snackbarMessage.value, snackPosition: SnackPosition.TOP);
+    }
   }
 
   // Method untuk navigasi ke halaman Login

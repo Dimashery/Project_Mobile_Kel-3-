@@ -1,118 +1,116 @@
+import 'package:doi_coffee/app/modules/forget_password/verify_code/controllers/verify_code_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../controllers/verify_code_controller.dart'; // Import controller
 
-class VerifyCodePage extends StatelessWidget {
-  VerifyCodePage({super.key});
+class VerifyOTPView extends StatelessWidget {
+  final VerifyOTPController controller = VerifyOTPController();
 
   @override
   Widget build(BuildContext context) {
-    final VerifyCodeController controller = Get.put(VerifyCodeController()); // Menginisialisasi controller
+    final String email = ModalRoute.of(context)!.settings.arguments as String;
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              // Logo dan tombol "Sign Up" di bagian atas
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: controller.goToForgetPasswordPage, // Menggunakan metode dari controller
-                    child: const Icon(Icons.arrow_back),
-                  ),
-                  const Image(width: 100, image: AssetImage('assets/images/logo/doi_coffee.png')), // Sesuaikan path logo
-                  GestureDetector(
-                    onTap: controller.goToLoginPage, // Navigasi ke halaman Login
-                    child: const Text(
-                      "Sign In!",
-                      style: TextStyle(decoration: TextDecoration.underline),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 170),
-
-              // Title
-              const Text(
-                'Verify Code',
-                style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-
-              // Subtitle
-              const Text(
-                'Enter the 4-digit code sent to your email',
-                style: TextStyle(fontSize: 14),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 40),
-
-              // Input untuk kode verifikasi (4 kotak)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildCodeBox(controller.codeController1),
-                  _buildCodeBox(controller.codeController2),
-                  _buildCodeBox(controller.codeController3),
-                  _buildCodeBox(controller.codeController4),
-                ],
-              ),
-              const SizedBox(height: 70),
-
-              // Button "Verify The Code"
-              GestureDetector(
-                onTap: controller.verifyCode, // Menggunakan metode dari controller
-                child: Container(
-                  width: 300,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Verify The Code",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Back to Login link
-              GestureDetector(
-                onTap: controller.goToLoginPage, // Menggunakan metode dari controller
-                child: const Text(
-                  "Back to Login",
-                  style: TextStyle(decoration: TextDecoration.underline),
-                ),
-              ),
-            ],
-          ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Aksi untuk "Sign Up!"
+            },
+            child: const Text(
+              'Sign Up!',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ],
       ),
-    );
-  }
-
-  // Widget untuk kode verifikasi (TextField dengan border dan ukuran)
-  Widget _buildCodeBox(TextEditingController controller) {
-    return SizedBox(
-      width: 50,
-      height: 50,
-      child: TextField(
-        controller: controller,
-        textAlign: TextAlign.center,
-        maxLength: 1,
-        decoration: InputDecoration(
-          counterText: "", // Menghilangkan counter untuk panjang maksimal
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-        keyboardType: TextInputType.number,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 50),
+                    Center(
+                      child: Image.asset(
+                        'assets/images/logo/doi_coffee.png', // Sesuaikan path logo Anda
+                        height: 40,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    const Text(
+                      'Check Your Email',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'We sent a reset link to $email\nEnter the 5-digit code mentioned in the email',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(5, (index) => 
+                        Container(
+                          width: 50,
+                          child: TextField(
+                            controller: controller.otpControllers[index],
+                            maxLength: 1,
+                            textAlign: TextAlign.center,
+                            decoration: InputDecoration(
+                              counterText: '',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(color: Colors.black54),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      onPressed: () => controller.verifyOTP(context, email),
+                      child: const Text(
+                        'Verify The Code',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () => controller.resendOTP(context, email),
+                      child: const Text(
+                        'Kirim OTP Lagi',
+                        style: TextStyle(color: Colors.blue, fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

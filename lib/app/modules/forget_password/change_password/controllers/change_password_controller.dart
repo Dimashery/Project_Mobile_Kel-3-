@@ -1,48 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../../../../routes/app_routes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ChangePasswordController extends GetxController {
+class NewPasswordController {
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
-  // Method untuk mengubah password
-  void changePassword() {
+  Future<void> updatePassword(BuildContext context, String email) async {
     String newPassword = newPasswordController.text;
     String confirmPassword = confirmPasswordController.text;
 
-    // Validasi password
-    if (newPassword.isEmpty || confirmPassword.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please fill in all fields',
-        snackPosition: SnackPosition.TOP,
-      );
-      return;
+    if (newPassword == confirmPassword && newPassword.length >= 5) {
+      try {
+        User user = FirebaseAuth.instance.currentUser!;
+        await user.updatePassword(newPassword);
+
+        // Navigasi ke halaman menu berikutnya setelah berhasil mengupdate password
+        Navigator.pushReplacementNamed(context, '/password-changed');
+      } catch (e) {
+        print(e);
+        showTopSnackBar(context, 'Failed to update password');
+      }
+    } else {
+      showTopSnackBar(context, 'Passwords do not match or are too short');
     }
-
-    if (newPassword != confirmPassword) {
-      Get.snackbar(
-        'Error',
-        'Passwords do not match',
-        snackPosition: SnackPosition.TOP,
-      );
-      return;
-    }
-
-    // Tambahkan logika untuk mengganti password di sini
-
-    // Jika berhasil, navigasi ke halaman Password Changed
-    Get.offNamed(AppRoutes.PASSWORD_CHANGED);
   }
 
-  // Method untuk kembali ke halaman Verify Code
-  void goToVerifyCodePage() {
-    Get.offNamed(AppRoutes.VERIFY_CODE);
-  }
-
-  // Method untuk kembali ke halaman Login
-  void goToLoginPage() {
-    Get.offNamed(AppRoutes.LOGIN_PAGE);
+  void showTopSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: MediaQuery.of(context).size.height - 100),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 }

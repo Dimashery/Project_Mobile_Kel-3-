@@ -1,106 +1,100 @@
+import 'package:doi_coffee/app/modules/forget_password/forget_password/controllers/forget_password_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../controllers/forget_password_controller.dart'; // Import controller
 
-class ForgetPasswordPage extends StatelessWidget {
-  ForgetPasswordPage({super.key});
+class EnterEmailView extends StatelessWidget {
+  final EnterEmailController controller = EnterEmailController();
 
   @override
   Widget build(BuildContext context) {
-    final ForgetPasswordController controller = Get.put(ForgetPasswordController()); // Menginisialisasi controller
-
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              // Logo dan tombol "Sign Up" di atas
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: controller.goToLoginPage, // Menggunakan metode dari controller
-                    child: const Icon(Icons.arrow_back),
-                  ),
-                  const Image(width: 100, image: AssetImage('assets/images/logo/doi_coffee.png')), // Sesuaikan path logo
-                  GestureDetector(
-                    onTap: controller.goToLoginPage, // Navigasi ke halaman Login
-                    child: const Text(
-                      "Sign In!",
-                      style: TextStyle(decoration: TextDecoration.underline),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 170),
-
-              // Title
-              const Text(
-                'Enter Your Email',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-
-              // Sub Title
-              const Text(
-                'Enter the email address to get a link to reset your password',
-                style: TextStyle(fontSize: 14),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 40),
-
-              // Input email field
-              const Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  "Email",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: controller.emailController, // Menggunakan controller dari GetX
-                decoration: InputDecoration(
-                  hintText: 'Enter your Email',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 36),
-
-              // Button "Continue"
-              GestureDetector(
-                onTap: controller.continueToVerifyCode, // Menggunakan metode dari controller
-                child: Container(
-                  width: 300,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Continue",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Back to Login link
-              GestureDetector(
-                onTap: controller.goToLoginPage, // Menggunakan metode dari controller
-                child: const Text(
-                  "Back to Login",
-                  style: TextStyle(decoration: TextDecoration.underline),
-                ),
-              ),
-            ],
-          ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Aksi untuk "Sign Up!"
+            },
+            child: const Text(
+              'Sign Up!',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 50),
+                    Center(
+                      child: Image.asset(
+                        'assets/images/logo/doi_coffee.png', // Sesuaikan path logo Anda
+                        height: 40,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    const Text(
+                      'Enter Your Email',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Enter the email address to get link reset your password',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 30),
+                    TextField(
+                      controller: controller.emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: const TextStyle(color: Colors.black54),
+                        hintText: 'Enter your Email',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: const BorderSide(color: Colors.black54),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      onPressed: () async {
+                        await controller.sendOTP(context);
+                      },
+                      child: const Text(
+                        'Continue',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

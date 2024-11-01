@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_routes.dart';
 import '../controllers/soft_drink_controller.dart';
 
 class SoftDrinkView extends StatelessWidget {
@@ -69,9 +68,9 @@ class SoftDrinkView extends StatelessWidget {
                         name: 'Fanta',
                         description: 'Minuman ringan bersoda dengan rasa Jeruk',
                         price: 'Rp. 7.000',
-                        quantity: controller.spriteQty.value,
-                        onAdd: controller.incrementSprite,
-                        onRemove: controller.decrementSprite,
+                        quantity: controller.fantaQty.value,
+                        onAdd: controller.incrementFanta,
+                        onRemove: controller.decrementFanta,
                       )),
                     ],
                   ),
@@ -80,9 +79,7 @@ class SoftDrinkView extends StatelessWidget {
 
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.START_TO_BUY);
-                    },
+                    onPressed: controller.addToMyOrder,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -123,7 +120,7 @@ class SoftDrinkView extends StatelessWidget {
         children: [
           Container(
             width: MediaQuery.of(context).size.width * 0.3,
-            height: MediaQuery.of(context).size.width * 0.2, // Lebar responsif gambar
+            height: MediaQuery.of(context).size.width * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
@@ -155,7 +152,6 @@ class SoftDrinkView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Tombol tambah/kurang di bawah harga
                 Row(
                   children: [
                     Container(

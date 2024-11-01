@@ -44,7 +44,7 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 const Text(
-                  "Username",
+                  "Email",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),

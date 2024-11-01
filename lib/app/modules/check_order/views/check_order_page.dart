@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../conrtrollers/check_order_controller.dart';
-// Import controller yang telah dibuat
 
-class CheckOrderPage extends StatelessWidget {
+class CheckOrderPage extends StatefulWidget {
   const CheckOrderPage({super.key});
+
+  @override
+  _CheckOrderPageState createState() => _CheckOrderPageState();
+}
+
+class _CheckOrderPageState extends State<CheckOrderPage> {
+  int _selectedIndex = 0; // 0 for Ongoing, 1 for Complete
 
   @override
   Widget build(BuildContext context) {
@@ -17,99 +23,158 @@ class CheckOrderPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Baris atas: tombol kembali dan judul
               GestureDetector(
-                onTap: controller.goBack, // Menggunakan metode dari controller
+                onTap: controller.goBack,
                 child: const Icon(Icons.arrow_back),
               ),
               const SizedBox(height: 24),
-
-              // Judul halaman
-              const Center(
-                child: Text(
-                  "Your Order",
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                ),
+              Center(
+                child: Obx(() => Text(
+                  "Order (${controller.getOrderCount()})",
+                  style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                )),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 24),
 
-              // Status pesanan
-              Text(
-                controller.getOrderStatus(), // Menggunakan metode dari controller
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              // Menu to select Ongoing or Complete
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _selectedIndex = 0; // Select Ongoing
+                      });
+                    },
+                    child: const Text(
+                      "Ongoing",
+                      style: TextStyle(color: Colors.black), // Minimalist black text
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _selectedIndex = 1; // Select Complete
+                      });
+                    },
+                    child: const Text(
+                      "Complete",
+                      style: TextStyle(color: Colors.black), // Minimalist black text
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
 
-              // Kotak detail pesanan (transparan dengan border)
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Colors.grey.shade400, // Warna garis tepi
-                    width: 1.0,
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "BCA Virtual Account",
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            SizedBox(height: 4),
-                            Text("BCA"),
-                          ],
-                        ),
-                        const Text("19:30"),
-                      ],
-                    ),
-                    const Divider(thickness: 1, height: 24),
-                    const Text("1 x Indomie Goreng...............................Rp.15.000"),
-                    const Text("1 x Nasi Goreng....................................Rp.16.000"),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: const [
-                            Icon(Icons.location_on, color: Colors.red),
-                            SizedBox(width: 4),
-                            Text("Jl. Sengkaling, Malang"),
-                          ],
-                        ),
-                        Text(
-                          "Total : ${controller.getTotalOrder()}", // Menggunakan metode dari controller
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              // Kotak detail pesanan sesuai dengan menu yang dipilih
+              Expanded(
+                child: Obx(() {
+                  if (_selectedIndex == 0) {
+                    if (controller.ongoingOrders.isEmpty) {
+                      return const Center(child: Text('Tidak ada pesanan.'));
+                    }
+                    return ListView.builder(
+                      itemCount: controller.ongoingOrders.length,
+                      itemBuilder: (context, index) {
+                        final order = controller.ongoingOrders[index];
+                        return _buildOrderBox(order, controller, false);
+                      },
+                    );
+                  } else {
+                    if (controller.completedOrders.isEmpty) {
+                      return const Center(child: Text('Tidak ada pesanan selesai.'));
+                    }
+                    return ListView.builder(
+                      itemCount: controller.completedOrders.length,
+                      itemBuilder: (context, index) {
+                        final order = controller.completedOrders[index];
+                        return _buildOrderBox(order, controller, true);
+                      },
+                    );
+                  }
+                }),
               ),
-              const Spacer(),
 
-              // Text dan tombol Buy Again
+              // Bagian tombol 'Buy Again'
+              const SizedBox(height: 20),
               const Center(
                 child: Column(
                   children: [
                     Text("Want to add more orders?"),
                     SizedBox(height: 20),
-                    BuyAgainButton(), // Tombol dibisakan sebagai widget terpisah
+                    BuyAgainButton(),
                   ],
                 ),
               ),
-
-              const SizedBox(height: 100),
+              const SizedBox(height: 40),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildOrderBox(CoffeeOrder order, CheckOrderController controller, bool isComplete) {
+    final priceString = order.price.replaceAll(RegExp(r'[^0-9]'), '');
+    final price = int.tryParse(priceString) ?? 0;
+
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.only(bottom: 16.0),
+      decoration: BoxDecoration(
+        color: Colors.white, // Optional: background color
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.grey, // Add border color
+          width: 1.0,
+        ),
+      ),
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                order.quantity > 1 ? '${order.quantity} x ${order.itemName}' : order.itemName,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              Text("Total: Rp.${(price * order.quantity).toString()}"),
+            ],
+          ),
+          if (!isComplete) // Show check button only for ongoing orders
+            Positioned(
+              bottom: 8,
+              right: 8,
+              child: IconButton(
+                icon: const Icon(Icons.check, size: 20, color: Colors.green),
+                onPressed: () async {
+                  // Show confirmation dialog
+                  bool? confirm = await Get.dialog<bool?>(
+                    AlertDialog(
+                      title: const Text("Konfirmasi"),
+                      content: const Text("Apakah Anda yakin pesanan sudah diterima?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Get.back(result: true),
+                          child: const Text("Iya, Sudah"),
+                        ),
+                        TextButton(
+                          onPressed: () => Get.back(result: false),
+                          child: const Text("Belum"),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  // If confirmed, complete the order
+                  if (confirm == true) {
+                    controller.completeOrder(order);
+                  }
+                },
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -120,10 +185,10 @@ class BuyAgainButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CheckOrderController controller = Get.find(); // Mengambil instance controller yang sama
+    final CheckOrderController controller = Get.find();
 
     return GestureDetector(
-      onTap: controller.buyAgain, // Menggunakan metode dari controller
+      onTap: controller.buyAgain,
       child: Container(
         width: 200,
         height: 50,

@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../routes/app_routes.dart';
-import '../controllers/start_to_buy2_controller.dart'; // Import controller yang telah dibuat
+import '../../../order/controllers/my_order_controller.dart';
+import '../controllers/start_to_buy2_controller.dart';
+ // Import MyOrderController
 
 class StartToBuy2Page extends StatelessWidget {
   const StartToBuy2Page({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Mengambil instance dari StartToBuy2Controller
     final StartToBuy2Controller controller = Get.put(StartToBuy2Controller());
+    final MyOrderController orderController = Get.find<MyOrderController>(); // Instance of MyOrderController
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Get.back(); // Kembali ke halaman sebelumnya
+            Get.back();
           },
         ),
         title: LinearProgressIndicator(
-          value: 0.5, // Progress bar (opsional)
+          value: 0.5,
           backgroundColor: Colors.grey[300],
           color: Colors.black,
         ),
@@ -32,11 +34,11 @@ class StartToBuy2Page extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'What you want to buy?',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
@@ -51,10 +53,9 @@ class StartToBuy2Page extends StatelessWidget {
                 ],
               ),
             ),
-            // Tampilan order dari halaman MyOrder
-            SizedBox(height: 10),
-            _buildOrderSummary(controller),
-            SizedBox(height: 20),
+            const SizedBox(height: 10),
+            _buildOrderSummary(orderController), // Display order summary from MyOrderController
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -64,7 +65,7 @@ class StartToBuy2Page extends StatelessWidget {
   Widget _buildCategoryButton(StartToBuy2Controller controller, String label, IconData icon, String route) {
     return GestureDetector(
       onTap: () {
-        controller.navigateTo(route); // Arahkan ke halaman yang sesuai
+        controller.navigateTo(route);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -75,16 +76,16 @@ class StartToBuy2Page extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 50),
-            SizedBox(height: 10),
-            Text(label, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           ],
         ),
       ),
     );
   }
 
-  // Fungsi untuk menampilkan ringkasan order
-  Widget _buildOrderSummary(StartToBuy2Controller controller) {
+  // Widget to display dynamic order summary
+  Widget _buildOrderSummary(MyOrderController orderController) {
     return Container(
       width: 500,
       padding: const EdgeInsets.all(8.0),
@@ -92,17 +93,28 @@ class StartToBuy2Page extends StatelessWidget {
         color: const Color.fromARGB(255, 213, 245, 154),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text('MyOrder', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          Text('1 x Indomie Goreng - Rp. 15.000', style: TextStyle(fontSize: 16)),
-          Text('1 x Nasi Goreng - Rp. 16.000', style: TextStyle(fontSize: 16)),
-          SizedBox(height: 30),
-          Text('Total: Rp. 31.310', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-        ],
-      ),
+      child: Obx(() {
+        if (orderController.orderItems.isEmpty) {
+          return const Text('No items in the order.');
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('My Order', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            // Loop to display each item in the order
+            ...orderController.orderItems.map((item) => Text(
+              '${item.quantity} x ${item.name} - Rp. ${item.price.toStringAsFixed(0)}',
+              style: const TextStyle(fontSize: 16),
+            )),
+            const SizedBox(height: 30),
+            Text(
+              'Total: Rp. ${orderController.getTotal().toStringAsFixed(0)}',
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+          ],
+        );
+      }),
     );
   }
 }

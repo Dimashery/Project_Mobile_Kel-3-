@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/history_controller.dart';
 
 class HistoryView extends StatelessWidget {
   const HistoryView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final HistoryController controller = Get.put(HistoryController());
+
     return Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -17,49 +20,50 @@ class HistoryView extends StatelessWidget {
         title: const Text('History'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        elevation: 0, // Hilangkan bayangan app bar
+        elevation: 0,
       ),
-      body: Align(
-        alignment: Alignment.topCenter, // Posisikan di bagian atas tengah
-        child: Padding(
-          padding: const EdgeInsets.only(
-              top: 40), // Tambahkan padding untuk jarak dari atas
-          child: buildHistoryView(),
-        ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Obx(() {
+          if (controller.historyOrders.isEmpty) {
+            return const Center(child: Text('Tidak ada riwayat pesanan.'));
+          }
+
+          return ListView.builder(
+            itemCount: controller.historyOrders.length,
+            itemBuilder: (context, index) {
+              final order = controller.historyOrders[index];
+              return _buildOrderCard(order);
+            },
+          );
+        }),
       ),
     );
   }
 
-  // Fungsi buildHistoryView
-  Widget buildHistoryView() {
+  Widget _buildOrderCard(Map<String, dynamic> order) {
     return Container(
-      width: 400,
-      height: 200,
-      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 213, 245, 154),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'MyOrder',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          Text(
-            '1 x Indomie Goreng - Rp. 15.000',
-            style: TextStyle(fontSize: 16),
+            'Pesanan: ${order["itemName"]} - ${order["quantity"]} x Rp. ${order["price"]}',
+            style: const TextStyle(fontSize: 16),
           ),
           Text(
-            '1 x Nasi Goreng - Rp. 16.000',
-            style: TextStyle(fontSize: 16),
+            'Harga: Rp. ${order["price"]}', // Menampilkan harga per item tanpa perkalian
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 5),
           Text(
-            'Total: Rp. 31.310',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            'Tanggal: ${order["timestamp"].toDate().toLocal()}',
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
         ],
       ),

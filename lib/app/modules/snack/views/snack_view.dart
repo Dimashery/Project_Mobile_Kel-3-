@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_routes.dart';
 import '../controllers/snack_controller.dart';
 
 class SnackView extends StatelessWidget {
@@ -79,9 +78,7 @@ class SnackView extends StatelessWidget {
 
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.START_TO_BUY);
-                    },
+                    onPressed: controller.addToMyOrder, // Ubah sesuai controller
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),

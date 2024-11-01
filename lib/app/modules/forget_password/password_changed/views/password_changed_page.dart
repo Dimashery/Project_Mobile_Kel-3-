@@ -1,62 +1,99 @@
+import 'package:doi_coffee/app/modules/login/login_page/views/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../../../../routes/app_routes.dart';
- // Sesuaikan dengan path yang Anda gunakan
 
-class PasswordChangedPage extends StatelessWidget {
-  const PasswordChangedPage({super.key});
-
+class PasswordChangedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image(width: 100, image: AssetImage('assets/images/logo/doi_coffee.png')), // Sesuaikan path log
-                ],
+      backgroundColor: Colors.white,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
               ),
-              const SizedBox(height: 170),
-
-              // Pesan sukses
-              const Text(
-                "Your password has been successfully changed",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 28),
-
-              // Ikon centang hijau
-              const Icon(Icons.check_circle, color: Colors.black, size: 150),
-              const SizedBox(height: 58),
-
-              // Tombol "Back To Login"
-              GestureDetector(
-                onTap: () {
-                  Get.offNamed(AppRoutes.LOGIN_PAGE);  // Kembali ke halaman Login
-                },
-                child: Container(
-                  width: 300,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Back To Login",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Logo or title at the top
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 16.0),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.coffee, // Placeholder for the "DO! COFFEE" logo
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'DO! COFFEE',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                    
+                    const SizedBox(height: 30), // Spacing
+
+                    // Success message
+                    const Text(
+                      'Your Password Has Been\nSuccessfully Changed',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 30), // Spacing
+
+                    // Checkmark icon
+                    const Icon(
+                      Icons.check_circle,
+                      size: 80,
+                      color: Colors.black,
+                    ),
+
+                    const SizedBox(height: 30), // Spacing
+
+                    // Back to Login button
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      ),
+                      onPressed: () {
+                        // Navigate back to login screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
+                      },
+                      child: const Text(
+                        'Back To Login',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

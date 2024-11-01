@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_routes.dart';
 import '../controllers/drink_controller.dart';
 
 class DrinkView extends StatelessWidget {
@@ -49,7 +48,7 @@ class DrinkView extends StatelessWidget {
 
                 // Es Teh Section
                 Obx(() => buildDrinkItem(
-                  context, // Pass the context here
+                  context,
                   imagePath: 'assets/images/drink/es_teh.png',
                   name: 'Es Teh',
                   description: 'Es Teh Manis Dingin',
@@ -62,7 +61,7 @@ class DrinkView extends StatelessWidget {
 
                 // Es Jeruk Section
                 Obx(() => buildDrinkItem(
-                  context, // Pass the context here
+                  context,
                   imagePath: 'assets/images/drink/es_jeruk.png',
                   name: 'Es Jeruk',
                   description: 'Es Jeruk Segar',
@@ -77,9 +76,7 @@ class DrinkView extends StatelessWidget {
                 // Tombol ADD TO MY ORDER
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.START_TO_BUY);
-                    },
+                    onPressed: controller.addToMyOrder, // Panggil method addToMyOrder
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -102,7 +99,7 @@ class DrinkView extends StatelessWidget {
 
   // Widget untuk membuat tampilan tiap minuman dengan gambar di kiri dan teks di kanan
   Widget buildDrinkItem(
-    BuildContext context, { // Add context parameter
+    BuildContext context, {
     required String imagePath,
     required String name,
     required String description,
@@ -123,7 +120,7 @@ class DrinkView extends StatelessWidget {
         children: [
           Container(
             width: MediaQuery.of(context).size.width * 0.3,
-            height: MediaQuery.of(context).size.width * 0.2, // Gambar responsif
+            height: MediaQuery.of(context).size.width * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
@@ -155,7 +152,6 @@ class DrinkView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Tombol tambah/kurang di bawah harga
                 Row(
                   children: [
                     Container(

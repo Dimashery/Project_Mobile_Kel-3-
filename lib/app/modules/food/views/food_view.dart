@@ -76,7 +76,7 @@ class FoodView extends StatelessWidget {
                 // Tombol ADD TO MY ORDER
                 Center(
                   child: ElevatedButton(
-                    onPressed: controller.goToStartToBuy,
+                    onPressed: controller.addToMyOrder, // Mengubah ini
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -99,7 +99,7 @@ class FoodView extends StatelessWidget {
 
   // Widget untuk membuat tampilan tiap makanan dengan gambar di kiri dan teks di kanan
   Widget buildFoodItem(
-    BuildContext context, { // Add BuildContext parameter
+    BuildContext context, {
     required String imagePath,
     required String name,
     required String description,

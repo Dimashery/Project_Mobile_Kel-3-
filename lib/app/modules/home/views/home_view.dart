@@ -3,12 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_routes.dart';
+import '../../profile/controllers/profile_controller.dart';
+
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    final ProfileController profileController = Get.find<ProfileController>();
+    
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -22,10 +27,16 @@ class HomeView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(height: 30),
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage('assets/images/profile.jpg'), // Ganti dengan path gambar profil yang sesuai
-                    ),
+                    // Profile Section
+                    Obx(() => CircleAvatar(
+                          radius: 40,
+                          backgroundImage: profileController
+                                  .profileImageUrl.value.isNotEmpty
+                              ? NetworkImage(
+                                  profileController.profileImageUrl.value)
+                              : AssetImage('assets/images/default_avatar.png')
+                                  as ImageProvider,
+                        )),
                     SizedBox(height: 10),
                     Text(
                       'Malang, Indonesia',
@@ -82,10 +93,17 @@ class HomeView extends StatelessWidget {
             }
           },
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.card_giftcard, color: Colors.black), label: 'Voucher'),
-            BottomNavigationBarItem(icon: Icon(Icons.shopping_cart, color: Colors.black), label: 'My Order'),
-            BottomNavigationBarItem(icon: Icon(Icons.person, color: Colors.black), label: 'Profile'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.card_giftcard, color: Colors.black),
+                label: 'Voucher'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_cart, color: Colors.black),
+                label: 'My Order'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person, color: Colors.black),
+                label: 'Profile'),
           ],
         ),
       ),
@@ -114,11 +132,13 @@ class HomeView extends StatelessWidget {
               SizedBox(width: 20),
               _buildCategoryItem('Drink', Icons.local_drink, AppRoutes.DRINK),
               SizedBox(width: 20),
-              _buildCategoryItem('Snack', Icons.restaurant_menu, AppRoutes.SNACK),
+              _buildCategoryItem(
+                  'Snack', Icons.restaurant_menu, AppRoutes.SNACK),
               SizedBox(width: 20),
               _buildCategoryItem('Coffee', Icons.local_cafe, AppRoutes.COFFEE),
               SizedBox(width: 20),
-              _buildCategoryItem('Soft Drink', Icons.local_bar, AppRoutes.SOFT_DRINK),
+              _buildCategoryItem(
+                  'Soft Drink', Icons.local_bar, AppRoutes.SOFT_DRINK),
             ],
           ),
         ),
@@ -144,9 +164,11 @@ class HomeView extends StatelessWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              _buildProductItem('Kopi Tubruk', 'Rp. 12.000', 'Normal / Regular', 'assets/images/kopi_tubruk.jpg'),
+              _buildProductItem('Kopi Tubruk', 'Rp. 12.000', 'Normal / Regular',
+                  'assets/images/kopi_tubruk.jpg'),
               SizedBox(width: 30),
-              _buildProductItem('Es Taro', 'Rp. 15.000', 'Normal / Regular', 'assets/images/es_taro.jpg'),
+              _buildProductItem('Es Taro', 'Rp. 15.000', 'Normal / Regular',
+                  'assets/images/es_taro.jpg'),
             ],
           ),
         ),
@@ -172,9 +194,11 @@ class HomeView extends StatelessWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              _buildProductItem('Tempe Mendoan', 'Rp. 10.000', 'Normal / Regular', 'assets/images/tempe_mendoan.jpg'),
+              _buildProductItem('Tempe Mendoan', 'Rp. 10.000',
+                  'Normal / Regular', 'assets/images/tempe_mendoan.jpg'),
               SizedBox(width: 20),
-              _buildProductItem('Nasi Goreng', 'Rp. 16.000', 'Normal / Regular', 'assets/images/nasi_goreng.jpg'),
+              _buildProductItem('Nasi Goreng', 'Rp. 16.000', 'Normal / Regular',
+                  'assets/images/nasi_goreng.jpg'),
             ],
           ),
         ),
@@ -203,7 +227,8 @@ class HomeView extends StatelessWidget {
   }
 
   // Helper function to create Product items
-  Widget _buildProductItem(String name, String price, String description, String imagePath) {
+  Widget _buildProductItem(
+      String name, String price, String description, String imagePath) {
     return Container(
       width: 270,
       margin: EdgeInsets.only(right: 9),

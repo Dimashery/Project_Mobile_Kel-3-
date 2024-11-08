@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/profile_controller.dart';
@@ -7,18 +8,18 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ProfileController controller =
-        Get.put(ProfileController()); // Menginisialisasi controller
+    final ProfileController controller = Get.put(ProfileController());
 
-    // Mengambil ukuran layar untuk responsivitas
+    // Get screen width for responsiveness
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: controller.goBack,
+           onPressed: () => Get.back(),
         ),
       ),
       body: SingleChildScrollView(
@@ -31,41 +32,49 @@ class ProfileView extends StatelessWidget {
               Row(
                 children: [
                   Obx(() => GestureDetector(
-                        onTap: () {
-                          controller.pickImage();
-                        },
-                        child: CircleAvatar(
-                          radius: screenWidth * 0.08,
-                          backgroundColor: Colors.grey[300],
-                          backgroundImage: controller
-                                  .profileImageUrl.value.isNotEmpty
-                              ? NetworkImage(controller.profileImageUrl.value)
-                              : const AssetImage(
-                                      'assets/images/default_avatar.png')
-                                  as ImageProvider,
-                        ),
-                      )),
+                    onTap: () {
+                      controller.pickImage();
+                    },
+                    child: CircleAvatar(
+                      radius: screenWidth * 0.08,
+                      backgroundColor: Colors.grey[300],
+                      backgroundImage: controller.profileImageUrl.value.isNotEmpty
+                          ? NetworkImage(controller.profileImageUrl.value)
+                          : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
+                    ),
+                  )),
                   const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'FULANA PUTRI ANDRIANI',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text('📍 Malang, Indonesia',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          )),
-                      Text('0815566777328',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          )),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Obx(() => Text(
+                                controller.userName.value,
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
+                              )),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.black, size: 20),
+                              onPressed: controller.goToEditProfile, // Navigates to Edit Profile
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Obx(() => Text(
+                          controller.userLocation.value,
+                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        )),
+                        const SizedBox(height: 4),
+                        Obx(() => Text(
+                          controller.userPhone.value,
+                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        )),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -73,17 +82,14 @@ class ProfileView extends StatelessWidget {
 
               // MyAccount Section
               const Text(
-                'MyAccount',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
+                'My Account',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
               ),
               const SizedBox(height: 15),
 
               // List of Menu Items
               ListTile(
-                title: const Text('Your Order'),
+                title: const Text('Your Orders'),
                 onTap: () => controller.navigateTo('/check-order'),
               ),
               ListTile(

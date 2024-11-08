@@ -63,6 +63,8 @@ android {
         implementation 'com.google.firebase:firebase-storage'
         implementation 'com.google.firebase:firebase-analytics'
         implementation 'androidx.multidex:multidex:2.0.1'
+        implementation 'androidx.core:core:1.6.0'
+
     }
     // Dependencies lainnya
 

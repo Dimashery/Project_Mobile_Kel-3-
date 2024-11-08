@@ -1,19 +1,14 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../routes/app_routes.dart';
-import '../../profile/controllers/profile_controller.dart';
-
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    final ProfileController profileController = Get.find<ProfileController>();
-    
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -22,43 +17,58 @@ class HomeView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Profile Section
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 30),
-                    // Profile Section
-                    Obx(() => CircleAvatar(
+                // Profile Section with StreamBuilder
+                StreamBuilder<DocumentSnapshot>(
+                  stream: loadUserProfileStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text("Error loading profile data");
+                    } else if (!snapshot.hasData || !snapshot.data!.exists) {
+                      return Text("Profile data not found");
+                    }
+
+                    var userData = snapshot.data!.data() as Map<String, dynamic>;
+                    String profileImageUrl = userData['profileImageUrl'] ?? 'assets/images/profile.jpg';
+                    String location = userData['location'] ?? 'Location Unknown';
+                    String name = userData['name'] ?? 'User';
+
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 30),
+                        CircleAvatar(
                           radius: 40,
-                          backgroundImage: profileController
-                                  .profileImageUrl.value.isNotEmpty
-                              ? NetworkImage(
-                                  profileController.profileImageUrl.value)
-                              : AssetImage('assets/images/default_avatar.png')
-                                  as ImageProvider,
-                        )),
-                    SizedBox(height: 10),
-                    Text(
-                      'Malang, Indonesia',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Hi, Fulana',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.toNamed(AppRoutes.START_TO_BUY);
-                      },
-                      child: Text('Start to Buy'),
-                    ),
-                  ],
+                          backgroundImage: profileImageUrl.startsWith('http')
+                              ? NetworkImage(profileImageUrl)
+                              : AssetImage(profileImageUrl) as ImageProvider,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          location,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Hi, $name',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.START_TO_BUY);
+                          },
+                          child: Text('Start to Buy'),
+                        ),
+                      ],
+                    );
+                  },
                 ),
+
                 SizedBox(height: 20), // Space before Category section
 
                 // Category Section
@@ -78,11 +88,14 @@ class HomeView extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: 0, // Index aktif
+          currentIndex: 0,
           onTap: (index) {
             switch (index) {
               case 0:
                 Get.toNamed(AppRoutes.HOME);
+                break;
+              case 1:
+                Get.toNamed(AppRoutes.FREE_VOUCHER);
                 break;
               case 2:
                 Get.toNamed(AppRoutes.MY_ORDER);
@@ -93,21 +106,23 @@ class HomeView extends StatelessWidget {
             }
           },
           items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.card_giftcard, color: Colors.black),
-                label: 'Voucher'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart, color: Colors.black),
-                label: 'My Order'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person, color: Colors.black),
-                label: 'Profile'),
+            BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.card_giftcard, color: Colors.black), label: 'Voucher'),
+            BottomNavigationBarItem(icon: Icon(Icons.shopping_cart, color: Colors.black), label: 'My Order'),
+            BottomNavigationBarItem(icon: Icon(Icons.person, color: Colors.black), label: 'Profile'),
           ],
         ),
       ),
     );
+  }
+
+  // Function to get user profile stream from Firestore
+  Stream<DocumentSnapshot> loadUserProfileStream() {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final String userId = auth.currentUser!.uid;
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    return firestore.collection('profiles').doc(userId).snapshots();
   }
 
   // Helper function to build Category section
@@ -132,13 +147,11 @@ class HomeView extends StatelessWidget {
               SizedBox(width: 20),
               _buildCategoryItem('Drink', Icons.local_drink, AppRoutes.DRINK),
               SizedBox(width: 20),
-              _buildCategoryItem(
-                  'Snack', Icons.restaurant_menu, AppRoutes.SNACK),
+              _buildCategoryItem('Snack', Icons.restaurant_menu, AppRoutes.SNACK),
               SizedBox(width: 20),
               _buildCategoryItem('Coffee', Icons.local_cafe, AppRoutes.COFFEE),
               SizedBox(width: 20),
-              _buildCategoryItem(
-                  'Soft Drink', Icons.local_bar, AppRoutes.SOFT_DRINK),
+              _buildCategoryItem('Soft Drink', Icons.local_bar, AppRoutes.SOFT_DRINK),
             ],
           ),
         ),
@@ -164,11 +177,9 @@ class HomeView extends StatelessWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              _buildProductItem('Kopi Tubruk', 'Rp. 12.000', 'Normal / Regular',
-                  'assets/images/kopi_tubruk.jpg'),
+              _buildProductItem('Kopi Tubruk', 'Rp. 12.000', 'Normal / Regular', 'assets/images/kopi_tubruk.jpg'),
               SizedBox(width: 30),
-              _buildProductItem('Es Taro', 'Rp. 15.000', 'Normal / Regular',
-                  'assets/images/es_taro.jpg'),
+              _buildProductItem('Es Taro', 'Rp. 15.000', 'Normal / Regular', 'assets/images/es_taro.jpg'),
             ],
           ),
         ),
@@ -194,11 +205,9 @@ class HomeView extends StatelessWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              _buildProductItem('Tempe Mendoan', 'Rp. 10.000',
-                  'Normal / Regular', 'assets/images/tempe_mendoan.jpg'),
+              _buildProductItem('Tempe Mendoan', 'Rp. 10.000', 'Normal / Regular', 'assets/images/tempe_mendoan.jpg'),
               SizedBox(width: 20),
-              _buildProductItem('Nasi Goreng', 'Rp. 16.000', 'Normal / Regular',
-                  'assets/images/nasi_goreng.jpg'),
+              _buildProductItem('Nasi Goreng', 'Rp. 16.000', 'Normal / Regular', 'assets/images/nasi_goreng.jpg'),
             ],
           ),
         ),
@@ -227,8 +236,7 @@ class HomeView extends StatelessWidget {
   }
 
   // Helper function to create Product items
-  Widget _buildProductItem(
-      String name, String price, String description, String imagePath) {
+  Widget _buildProductItem(String name, String price, String description, String imagePath) {
     return Container(
       width: 270,
       margin: EdgeInsets.only(right: 9),

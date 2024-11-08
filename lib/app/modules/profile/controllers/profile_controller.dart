@@ -1,64 +1,127 @@
 import 'dart:io';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doi_coffee/app/modules/profile/views/edit_profile.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ProfileController extends GetxController {
-  var profileImageUrl = ''.obs; // Observable untuk URL gambar di Firebase
+  final userName = ''.obs;
+  final userLocation = ''.obs;
+  final userPhone = ''.obs;
+  final profileImageUrl = ''.obs;
 
-  final FirebaseStorage storage = FirebaseStorage.instance;
+  final nameController = TextEditingController();
+  final locationController = TextEditingController();
+  final phoneController = TextEditingController();
+
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Method untuk mengambil gambar dari galeri
-  Future<void> pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
-      await _uploadImage(File(image.path));
-    }
+  @override
+  void onInit() {
+    super.onInit();
+    listenToProfileChanges(); // Start listening for real-time updates
   }
 
-  // Method untuk mengunggah gambar ke Firebase Storage
-  Future<void> _uploadImage(File file) async {
-    try {
-      // Ambil User ID dari autentikasi
-      final userId = FirebaseAuth.instance.currentUser!.uid; // Ambil User ID
+  // Listen to real-time changes in Firestore
+  void listenToProfileChanges() {
+    final currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      String userId = currentUser.uid;
 
-      // Gunakan User ID untuk menentukan dokumen yang sesuai
-      final ref = storage.ref().child('profile_images/$userId/${DateTime.now().toString()}.jpg');
-      await ref.putFile(file);
-      final url = await ref.getDownloadURL();
-      profileImageUrl.value = url;
+      firestore.collection('profiles').doc(userId).snapshots().listen((userDoc) {
+        if (userDoc.exists) {
+          userName.value = userDoc['name'] ?? '';
+          userLocation.value = userDoc['location'] ?? '';
+          userPhone.value = userDoc['phone'] ?? '';
+          profileImageUrl.value = userDoc['profileImageUrl'] ?? '';
 
-      // Simpan URL gambar di Firestore dengan User ID
-      await firestore.collection('users').doc(userId).update({
-        'profileImageUrl': url,
+          // Update the text controllers for editing profile
+          nameController.text = userName.value;
+          locationController.text = userLocation.value;
+          phoneController.text = userPhone.value;
+        }
       });
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to upload image: $e');
     }
   }
 
-  // Method untuk mengambil URL gambar dari Firestore saat profil dimuat
-  Future<void> loadProfileImage() async {
-    try {
-      final userId = FirebaseAuth.instance.currentUser!.uid; // Ambil User ID
-      final userDoc = await firestore.collection('users').doc(userId).get();
-      profileImageUrl.value = userDoc['profileImageUrl'] ?? '';
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to load profile image: $e');
-    }
+  void goBack() {
+    Get.back();
   }
 
-  // Method untuk navigasi
+  void goToEditProfile() {
+    Get.to(() => const EditProfileView());
+  }
+
+  // Navigation handler
   void navigateTo(String route) {
     Get.toNamed(route);
   }
 
-  void goBack() {
-    Get.toNamed('/home');
+  // Request permission for gallery access
+  Future<void> requestPermission() async {
+    PermissionStatus status = await Permission.photos.request();
+
+    if (status.isGranted) {
+      print("Permission granted");
+    } else if (status.isDenied) {
+      print("Permission denied");
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings(); // Open settings to allow the user to enable permissions manually
+    }
+  }
+
+  // Pick and upload profile image
+  void pickImage() async {
+    // Request permission before picking image
+    await requestPermission();
+
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final file = File(pickedFile.path);
+      final currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        String userId = currentUser.uid;
+        final uploadTask = storage.ref('profile_images/$userId/${file.path.split('/').last}').putFile(file);
+        final snapshot = await uploadTask;
+        profileImageUrl.value = await snapshot.ref.getDownloadURL();
+        updateProfileImageInFirestore(profileImageUrl.value);
+      }
+    }
+  }
+
+  // Save profile data to Firestore
+  void saveProfile() async {
+    final currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      String userId = currentUser.uid;
+      userName.value = nameController.text;
+      userLocation.value = locationController.text;
+      userPhone.value = phoneController.text;
+
+      await firestore.collection('profiles').doc(userId).set({
+        'name': userName.value,
+        'location': userLocation.value,
+        'phone': userPhone.value,
+        'profileImageUrl': profileImageUrl.value,
+      });
+      Get.back();
+    }
+  }
+
+  // Update profile image URL only in Firestore
+  void updateProfileImageInFirestore(String url) async {
+    final currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      String userId = currentUser.uid;
+      await firestore.collection('profiles').doc(userId).update({
+        'profileImageUrl': url,
+      });
+    }
   }
 }

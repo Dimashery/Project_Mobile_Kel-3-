@@ -41,6 +41,17 @@ abstract class AppRoutes {
   static const FREE_VOUCHER = '/free_voucher';
   static const GIVE_RATING = '/give_rating';
   static const ACCOUNT_SETTINGS = '/account_settings';
+
+
+  //ADMIN
+  static const LOGIN_ADMIN = '/login-admin';
+  static const HOME_ADMIN = '/home-admin';
+  static const FOOD_ADMIN = '/food_admin';
+  static const DRINK_ADMIN = '/drinkAdmin';
+  static const SNACK_ADMIN = '/snack-admin';
+  static const COFFEE_ADMIN = '/coffee_admin';
+  static const SOFT_DRINK_ADMIN = '/soft-drink-admin';
+  
 }
 
 

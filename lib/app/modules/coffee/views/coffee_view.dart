@@ -15,11 +15,11 @@ class CoffeeView extends StatelessWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Get.back();
+              Get.back(); // Navigasi ke halaman sebelumnya
             },
           ),
           title: LinearProgressIndicator(
-            value: 0.7,
+            value: 0.5, // Progress bar
             backgroundColor: Colors.grey[300],
             color: Colors.black,
           ),
@@ -32,6 +32,7 @@ class CoffeeView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // Title
                 const Align(
                   alignment: Alignment.center,
                   child: Text(
@@ -44,36 +45,33 @@ class CoffeeView extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
 
-                // Kopi Tubruk Section
-                Obx(() => buildCoffeeItem(
-                  context,
-                  imagePath: 'assets/images/coffee/kopi_tubruk.png',
-                  name: 'Kopi Tubruk',
-                  description: 'Kopi Tubruk dengan rempah-rempah',
-                  price: 'Rp. 7.000',
-                  quantity: controller.kopiTubrukQty.value,
-                  onAdd: controller.incrementKopiTubruk,
-                  onRemove: controller.decrementKopiTubruk,
-                )),
-                const SizedBox(height: 20),
+                // Display coffee items from controller
+                Obx(() {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.coffeeMenu.length,
+                    itemBuilder: (context, index) {
+                      var coffeeItem = controller.coffeeMenu[index];
+                      return buildCoffeeItem(
+                        context,
+                        imagePath: coffeeItem["imageUrl"],
+                        name: coffeeItem["itemName"],
+                        description: coffeeItem["description"],
+                        price: coffeeItem["price"],
+                        quantity: coffeeItem["quantity"],
+                        onAdd: () => controller.updateQuantity(coffeeItem["docId"], true),
+                        onRemove: () => controller.updateQuantity(coffeeItem["docId"], false),
+                      );
+                    },
+                  );
+                }),
 
-                // Cappucino Section
-                Obx(() => buildCoffeeItem(
-                  context,
-                  imagePath: 'assets/images/coffee/cappucino.png',
-                  name: 'Cappucino',
-                  description: 'Cappucino dengan cream dan manis yang pas',
-                  price: 'Rp. 10.000',
-                  quantity: controller.cappucinoQty.value,
-                  onAdd: controller.incrementCappucino,
-                  onRemove: controller.decrementCappucino,
-                )),
                 const SizedBox(height: 30),
 
-                // Tombol ADD TO MY ORDER
+                // Add to My Order button
                 Center(
                   child: ElevatedButton(
-                    onPressed: controller.addToMyOrder, // Menggunakan method untuk menambahkan pesanan
+                    onPressed: controller.addToMyOrder,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -94,6 +92,7 @@ class CoffeeView extends StatelessWidget {
     );
   }
 
+  // Widget to build each coffee item
   Widget buildCoffeeItem(
     BuildContext context, {
     required String imagePath,
@@ -108,19 +107,20 @@ class CoffeeView extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        color: const Color.fromARGB(255, 243, 238, 197),
+        color: const Color.fromARGB(255, 243, 238, 197), // Light background
       ),
       padding: const EdgeInsets.all(14),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Image
           Container(
             width: MediaQuery.of(context).size.width * 0.3,
             height: MediaQuery.of(context).size.width * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
-                image: AssetImage(imagePath),
+                image: NetworkImage(imagePath),
                 fit: BoxFit.contain,
               ),
             ),
@@ -131,6 +131,7 @@ class CoffeeView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
+                // Coffee Name
                 Text(
                   name,
                   style: const TextStyle(
@@ -140,6 +141,7 @@ class CoffeeView extends StatelessWidget {
                 ),
                 Text(description),
                 const SizedBox(height: 10),
+                // Price
                 Text(
                   price,
                   style: const TextStyle(
@@ -148,8 +150,10 @@ class CoffeeView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
+                // Quantity adjustment row
                 Row(
                   children: [
+                    // Minus Button
                     Container(
                       width: 25,
                       height: 25,
@@ -164,11 +168,13 @@ class CoffeeView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
+                    // Quantity Text
                     Text(
                       '$quantity',
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(width: 10),
+                    // Plus Button
                     Container(
                       width: 25,
                       height: 25,

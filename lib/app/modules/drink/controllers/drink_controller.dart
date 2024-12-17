@@ -2,63 +2,72 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DrinkController extends GetxController {
-  // Reactive variables untuk jumlah minuman
-  var esTehQty = 0.obs;  // Jumlah untuk Es Teh
-  var esJerukQty = 0.obs; // Jumlah untuk Es Jeruk
-
-  // Firestore instance
+  var drinkMenu = <Map<String, dynamic>>[].obs;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Method untuk menambah jumlah
-  void incrementEsTeh() {
-    esTehQty++;
+  @override
+  void onInit() {
+    super.onInit();
+    loadDrinkMenu();
   }
 
-  void decrementEsTeh() {
-    if (esTehQty > 0) esTehQty--;
-  }
-
-  void incrementEsJeruk() {
-    esJerukQty++;
-  }
-
-  void decrementEsJeruk() {
-    if (esJerukQty > 0) esJerukQty--;
-  }
-
-  // Method untuk menambahkan pesanan ke Firestore
-  void addToMyOrder() async {
+  void loadDrinkMenu() async {
     try {
-      if (esTehQty.value > 0) {
-        await _firestore.collection('orders').add({
-          'itemName': 'Es Teh',
-          'price': 'Rp. 5.000',
-          'quantity': esTehQty.value,
-          'timestamp': FieldValue.serverTimestamp(),
-          'status': 'pending',
-        });
-      }
+      QuerySnapshot snapshot = await _firestore
+          .collection('orders')
+          .where('id', isEqualTo: 'Drink')
+          .get();
 
-      if (esJerukQty.value > 0) {
-        await _firestore.collection('orders').add({
-          'itemName': 'Es Jeruk',
-          'price': 'Rp. 7.000',
-          'quantity': esJerukQty.value,
-          'timestamp': FieldValue.serverTimestamp(),
-          'status': 'pending',
-        });
-      }
-
-      Get.snackbar('Pesanan Ditambahkan', 'Pesanan minuman Anda telah ditambahkan ke My Order');
-      goToStartToBuy();
+      drinkMenu.value = snapshot.docs.map((doc) {
+        return {
+          "docId": doc.id,
+          "itemName": doc["itemName"],
+          "price": doc["price"],
+          "imageUrl": doc["imageUrl"],
+          "description": doc["description"],
+          "quantity": 0, // Default quantity
+        };
+      }).toList();
     } catch (e) {
-      print("Error menambahkan pesanan: $e");
-      Get.snackbar('Error', 'Gagal menambahkan pesanan minuman');
+      print("Error loading drink menu: $e");
+      Get.snackbar('Error', 'Gagal memuat menu minuman');
     }
   }
 
-  // Method untuk navigasi ke halaman My Order
+  void updateQuantity(String docId, bool isAdd) {
+    int index = drinkMenu.indexWhere((item) => item["docId"] == docId);
+    if (index != -1) {
+      drinkMenu[index]["quantity"] = isAdd
+          ? drinkMenu[index]["quantity"] + 1
+          : (drinkMenu[index]["quantity"] > 0
+              ? drinkMenu[index]["quantity"] - 1
+              : 0);
+      drinkMenu.refresh();
+    }
+  }
+
+  void addToMyOrder() async {
+    try {
+      for (var item in drinkMenu) {
+        if (item["quantity"] > 0) {
+          await _firestore.collection('orders').add({
+            'itemName': item["itemName"],
+            'price': item["price"],
+            'quantity': item["quantity"],
+            'status': 'active',
+            'timestamp': FieldValue.serverTimestamp(),
+          });
+        }
+      }
+      Get.snackbar('Pesanan Ditambahkan', 'Pesanan Anda telah ditambahkan ke My Order');
+      goToStartToBuy();
+    } catch (e) {
+      print("Error adding order: $e");
+      Get.snackbar('Error', 'Gagal menambahkan pesanan');
+    }
+  }
+
   void goToStartToBuy() {
-    Get.toNamed('/start_to_buy'); // Ganti dengan route yang sesuai jika perlu
+    Get.toNamed('/start_to_buy');
   }
 }

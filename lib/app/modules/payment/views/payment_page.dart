@@ -9,6 +9,9 @@ class PaymentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final PaymentController controller = Get.put(PaymentController());
 
+    // Panggil ulang stream setiap kali halaman dibuka
+    controller.streamCompletedOrders();
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -16,6 +19,7 @@ class PaymentPage extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         centerTitle: true,
+        title: const Text('Payment'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -24,7 +28,7 @@ class PaymentPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 30),
-              // Kotak total
+              // Total payment section
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
@@ -40,43 +44,71 @@ class PaymentPage extends StatelessWidget {
                       style: TextStyle(fontSize: 40, color: Colors.white),
                     ),
                     const SizedBox(height: 10),
-                    Text(
-                      'Total: ${controller.getTotal()}',
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
+                    Obx(() => Text(
+                          'Total: ${controller.getTotal()}',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        )),
                   ],
                 ),
               ),
               const SizedBox(height: 30),
-              const Text('Choose your preferred payment method',
-                  style: TextStyle(fontSize: 18)),
+
+              // Choose payment method section
+              const Text(
+                'Choose your preferred payment method',
+                style: TextStyle(fontSize: 18),
+              ),
               const SizedBox(height: 20),
-              _buildPaymentOption(controller, 'OVO', 'OVO'),
-              _buildPaymentOption(controller, 'DANA', 'DANA Wallet'),
-              _buildPaymentOption(controller, 'BCA Virtual Account', 'BCA'),
+              _buildPaymentOption(controller, 'OVO', 'OVO Wallet Payment'),
+              _buildPaymentOption(controller, 'DANA', 'DANA Wallet Payment'),
+              _buildPaymentOption(
+                  controller, 'BCA Virtual Account', 'BCA Virtual Payment'),
+              const SizedBox(height: 30),
+
+              // Completed orders section
+              const Text('Menu Orders', style: TextStyle(fontSize: 18)),
+              const SizedBox(height: 10),
+              Obx(() {
+                if (controller.completedOrders.isEmpty) {
+                  return const Center(child: Text('No Orders Available.'));
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: controller.completedOrders.length,
+                  itemBuilder: (context, index) {
+                    final item = controller.completedOrders[index];
+                    return ListTile(
+                      title: Text(item.name),
+                      subtitle: Text('Quantity: ${item.quantity}'),
+                      trailing: Text('Rp. ${(item.price * item.quantity).toStringAsFixed(0)}'),
+                    );
+                  },
+                );
+              }),
+
               const SizedBox(height: 50),
-              // In your payment page where you handle the payment confirmation
+
+              // Pay Now button
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Assume you have access to the orderId here
-                    String orderId =
-                        "your_order_id"; // Replace with actual order ID
-                    controller.confirmPayment(orderId); // Pass the orderId
+                  onPressed: () async {
+                    await controller.addPaymentData();
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 17),
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 17),
                     backgroundColor: Colors.black,
                   ),
-                  child: const Text('Pay Now',
-                      style: TextStyle(color: Colors.white)),
+                  child: const Text(
+                    'Pay Now',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
-
               const SizedBox(height: 20),
             ],
           ),
@@ -85,11 +117,10 @@ class PaymentPage extends StatelessWidget {
     );
   }
 
+  // Build payment option widget
   Widget _buildPaymentOption(
       PaymentController controller, String paymentMethod, String description) {
-    return GetBuilder<PaymentController>(
-      builder: (controller) {
-        return Container(
+    return Obx(() => Container(
           margin: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.black),
@@ -102,22 +133,20 @@ class PaymentPage extends StatelessWidget {
                 title: Text(paymentMethod),
                 trailing: Radio<String>(
                   value: paymentMethod,
-                  groupValue: controller.selectedPaymentMethod,
+                  groupValue: controller.selectedPaymentMethod.value,
                   onChanged: (value) {
                     controller.selectPaymentMethod(value);
                   },
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 8.0),
                 child: Text(description,
                     style: const TextStyle(color: Colors.grey)),
               ),
             ],
           ),
-        );
-      },
-    );
+        ));
   }
 }

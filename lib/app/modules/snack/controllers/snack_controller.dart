@@ -2,58 +2,66 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SnackController extends GetxController {
-  // Reactive variables untuk jumlah snack
-  var tempeMendoanQty = 0.obs;
-  var kentangGorengQty = 0.obs;
-
-  // Firestore instance
+  var snackMenu = <Map<String, dynamic>>[].obs;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Method untuk menambah quantity
-  void incrementTempeMendoan() {
-    tempeMendoanQty++;
+  @override
+  void onInit() {
+    super.onInit();
+    loadSnackMenu();
   }
 
-  void incrementKentangGoreng() {
-    kentangGorengQty++;
-  }
+  // Fetch snack menu from Firestore where 'id' is 'Snack'
+  void loadSnackMenu() async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('orders')
+          .where('id', isEqualTo: 'Snack')
+          .get();
 
-  // Method untuk mengurangi quantity
-  void decrementTempeMendoan() {
-    if (tempeMendoanQty > 0) {
-      tempeMendoanQty--;
+      snackMenu.value = snapshot.docs.map((doc) {
+        return {
+          "docId": doc.id,
+          "itemName": doc["itemName"],
+          "price": doc["price"],
+          "imageUrl": doc["imageUrl"],
+          "description": doc["description"],
+          "quantity": 0, // Default quantity
+        };
+      }).toList();
+    } catch (e) {
+      print("Error loading snack menu: $e");
+      Get.snackbar('Error', 'Gagal memuat menu snack');
     }
   }
 
-  void decrementKentangGoreng() {
-    if (kentangGorengQty > 0) {
-      kentangGorengQty--;
+  // Update quantity of snack item
+  void updateQuantity(String docId, bool isAdd) {
+    int index = snackMenu.indexWhere((item) => item["docId"] == docId);
+    if (index != -1) {
+      snackMenu[index]["quantity"] = isAdd
+          ? snackMenu[index]["quantity"] + 1
+          : (snackMenu[index]["quantity"] > 0
+              ? snackMenu[index]["quantity"] - 1
+              : 0);
+      snackMenu.refresh();
     }
   }
 
-  // Method untuk menambahkan pesanan ke Firestore
+  // Add snack items to My Order
   void addToMyOrder() async {
     try {
-      if (tempeMendoanQty.value > 0) {
-        await _firestore.collection('orders').add({
-          'itemName': 'Tempe Mendoan',
-          'price': 'Rp. 10.000',
-          'quantity': tempeMendoanQty.value,
-          'timestamp': FieldValue.serverTimestamp(),
-          'status': 'pending',
-        });
+      for (var item in snackMenu) {
+        if (item["quantity"] > 0) {
+          await _firestore.collection('orders').add({
+            'itemName': item["itemName"],
+            'price': item["price"],
+            'quantity': item["quantity"],
+            'status': 'active',
+            'timestamp': FieldValue.serverTimestamp(),
+          });
+        }
       }
-
-      if (kentangGorengQty.value > 0) {
-        await _firestore.collection('orders').add({
-          'itemName': 'Kentang Goreng',
-          'price': 'Rp. 8.000',
-          'quantity': kentangGorengQty.value,
-          'timestamp': FieldValue.serverTimestamp(),
-          'status': 'pending',
-        });
-      }
-
       Get.snackbar('Pesanan Ditambahkan', 'Pesanan Anda telah ditambahkan ke My Order');
       goToStartToBuy();
     } catch (e) {
@@ -62,8 +70,8 @@ class SnackController extends GetxController {
     }
   }
 
-  // Method untuk navigasi
+  // Navigation to 'Start to Buy' page
   void goToStartToBuy() {
-    Get.toNamed('/start_to_buy'); // Ganti dengan route yang sesuai jika perlu
+    Get.toNamed('/start_to_buy');
   }
 }

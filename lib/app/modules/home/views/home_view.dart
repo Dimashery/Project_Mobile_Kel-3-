@@ -161,57 +161,88 @@ class HomeView extends StatelessWidget {
 
   // Helper function to build What's New section
   Widget _buildWhatsNewSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'What\'s New?',
-          style: TextStyle(
-            fontSize: 23,
-            fontWeight: FontWeight.bold,
+  return StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance.collection('whats_new').snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      }
+      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return Text('No products available');
+      }
+
+      final products = snapshot.data!.docs;
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'What\'s New?',
+            style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
           ),
-        ),
-        SizedBox(height: 20),
-        Container(
-          height: 250,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              _buildProductItem('Kopi Tubruk', 'Rp. 12.000', 'Normal / Regular', 'assets/images/kopi_tubruk.jpg'),
-              SizedBox(width: 30),
-              _buildProductItem('Es Taro', 'Rp. 15.000', 'Normal / Regular', 'assets/images/es_taro.jpg'),
-            ],
+          SizedBox(height: 20),
+          Container(
+            height: 250,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                final product = products[index];
+                return _buildProductItem(
+                  product['name'],
+                  'Rp. ${product['price']}',
+                  product['description'],
+                  product['imageUrl'],
+                );
+              },
+            ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
+    },
+  );
+}
+
 
   // Helper function to build Favorite Menu section
+   // Helper function to build Favorite Menu section
   Widget _buildFavoriteMenuSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Favorite Menu',
-          style: TextStyle(
-            fontSize: 23,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 20),
-        Container(
-          height: 250,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              _buildProductItem('Tempe Mendoan', 'Rp. 10.000', 'Normal / Regular', 'assets/images/tempe_mendoan.jpg'),
-              SizedBox(width: 20),
-              _buildProductItem('Nasi Goreng', 'Rp. 16.000', 'Normal / Regular', 'assets/images/nasi_goreng.jpg'),
-            ],
-          ),
-        ),
-      ],
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('favorite_menu').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Text('No favorite menu items available');
+        }
+
+        final products = snapshot.data!.docs;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Favorite Menu', style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
+            SizedBox(height: 20),
+            Container(
+              height: 250,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  return _buildProductItem(
+                    product['name'],
+                    'Rp. ${product['price']}',
+                    product['description'],
+                    product['imageUrl'],
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -236,6 +267,7 @@ class HomeView extends StatelessWidget {
   }
 
   // Helper function to create Product items
+   // Helper function to create Product items
   Widget _buildProductItem(String name, String price, String description, String imagePath) {
     return Container(
       width: 270,
@@ -249,8 +281,8 @@ class HomeView extends StatelessWidget {
               height: 140,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(imagePath),
-                  fit: BoxFit.cover,
+                  image: NetworkImage(imagePath),
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
@@ -259,19 +291,10 @@ class HomeView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    name,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Text(name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   SizedBox(height: 10),
                   Text(price, style: TextStyle(fontSize: 16)),
-                  Text(
-                    description,
-                    style: TextStyle(color: Colors.grey),
-                  ),
+                  Text(description, style: TextStyle(color: Colors.grey)),
                 ],
               ),
             ),

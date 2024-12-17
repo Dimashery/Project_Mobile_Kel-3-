@@ -2,54 +2,65 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FoodController extends GetxController {
-  // Reactive variables untuk jumlah makanan
-  var indomieGorengQty = 0.obs; // Quantity for Indomie Goreng
-  var nasiGorengQty = 0.obs;    // Quantity for Nasi Goreng
+  var foodMenu = <Map<String, dynamic>>[].obs;
 
-  // Firestore instance
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Method untuk menambah quantity
-  void addIndomieGoreng() {
-    indomieGorengQty++;
+  @override
+  void onInit() {
+    super.onInit();
+    loadFoodMenu();
   }
 
+  void loadFoodMenu() async {
+    try {
+      // Hanya ambil makanan dengan id "Food"
+      QuerySnapshot snapshot = await _firestore
+          .collection('orders')
+          .where('id', isEqualTo: 'Food')
+          .get();
 
-  void removeIndomieGoreng() {
-    if (indomieGorengQty > 0) indomieGorengQty--;
+      foodMenu.value = snapshot.docs.map((doc) {
+        return {
+          "docId": doc.id,
+          "itemName": doc["itemName"],
+          "price": doc["price"],
+          "imageUrl": doc["imageUrl"],
+          "description": doc["description"],
+          "quantity": 0, // Default quantity
+        };
+      }).toList();
+    } catch (e) {
+      print("Error loading food menu: $e");
+      Get.snackbar('Error', 'Gagal memuat menu makanan');
+    }
   }
 
-  void addNasiGoreng() {
-    nasiGorengQty++;
+  void updateQuantity(String docId, bool isAdd) {
+    int index = foodMenu.indexWhere((item) => item["docId"] == docId);
+    if (index != -1) {
+      foodMenu[index]["quantity"] = isAdd
+          ? foodMenu[index]["quantity"] + 1
+          : (foodMenu[index]["quantity"] > 0
+              ? foodMenu[index]["quantity"] - 1
+              : 0);
+      foodMenu.refresh();
+    }
   }
 
-  void removeNasiGoreng() {
-    if (nasiGorengQty > 0) nasiGorengQty--;
-  }
-
-  // Method untuk menambahkan pesanan ke Firestore
   void addToMyOrder() async {
     try {
-      if (indomieGorengQty.value > 0) {
-        await _firestore.collection('orders').add({
-          'itemName': 'Indomie Goreng',
-          'price': 'Rp. 15.000',
-          'quantity': indomieGorengQty.value,
-          'timestamp': FieldValue.serverTimestamp(),
-          'status': 'pending',
-        });
+      for (var item in foodMenu) {
+        if (item["quantity"] > 0) {
+          await _firestore.collection('orders').add({
+            'itemName': item["itemName"],
+            'price': item["price"],
+            'quantity': item["quantity"],
+            'status': 'active',
+            'timestamp': FieldValue.serverTimestamp(),
+          });
+        }
       }
-
-      if (nasiGorengQty.value > 0) {
-        await _firestore.collection('orders').add({
-          'itemName': 'Nasi Goreng',
-          'price': 'Rp. 16.000',
-          'quantity': nasiGorengQty.value,
-          'timestamp': FieldValue.serverTimestamp(),
-          'status': 'pending',
-        });
-      }
-
       Get.snackbar('Pesanan Ditambahkan', 'Pesanan Anda telah ditambahkan ke My Order');
       goToStartToBuy();
     } catch (e) {
@@ -58,8 +69,7 @@ class FoodController extends GetxController {
     }
   }
 
-  // Method untuk navigasi
   void goToStartToBuy() {
-    Get.toNamed('/start_to_buy'); // Ganti dengan route yang sesuai jika perlu
+    Get.toNamed('/start_to_buy');
   }
 }

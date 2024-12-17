@@ -46,30 +46,26 @@ class FoodView extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
 
-                // Indomie Goreng Section
-                Obx(() => buildFoodItem(
-                  context, // Pass context here
-                  imagePath: 'assets/images/food/indomie_goreng.png',
-                  name: 'Indomie Goreng',
-                  description: 'Indomie Goreng dengan Telur',
-                  price: 'Rp. 15.000',
-                  quantity: controller.indomieGorengQty.value,
-                  onAdd: controller.addIndomieGoreng,
-                  onRemove: controller.removeIndomieGoreng,
-                )),
-                const SizedBox(height: 20),
-
-                // Nasi Goreng Section
-                Obx(() => buildFoodItem(
-                  context, // Pass context here
-                  imagePath: 'assets/images/food/nasi_goreng.png',
-                  name: 'Nasi Goreng',
-                  description: 'Nasi Goreng dengan Telur',
-                  price: 'Rp. 16.000',
-                  quantity: controller.nasiGorengQty.value,
-                  onAdd: controller.addNasiGoreng,
-                  onRemove: controller.removeNasiGoreng,
-                )),
+                // Menampilkan menu makanan dari controller
+                Obx(() {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.foodMenu.length,
+                    itemBuilder: (context, index) {
+                      var foodItem = controller.foodMenu[index];
+                      return buildFoodItem(
+                        context,
+                        imagePath: foodItem["imageUrl"], // Assuming food image URL is available
+                        name: foodItem["itemName"],
+                        description: foodItem["description"],
+                        price: foodItem["price"],
+                        quantity: foodItem["quantity"],
+                        onAdd: () => controller.updateQuantity(foodItem["docId"], true),
+                        onRemove: () => controller.updateQuantity(foodItem["docId"], false),
+                      );
+                    },
+                  );
+                }),
 
                 const SizedBox(height: 30),
 
@@ -125,7 +121,7 @@ class FoodView extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
-                image: AssetImage(imagePath),
+                image: NetworkImage(imagePath), // Use NetworkImage if URL is provided
                 fit: BoxFit.contain,
               ),
             ),

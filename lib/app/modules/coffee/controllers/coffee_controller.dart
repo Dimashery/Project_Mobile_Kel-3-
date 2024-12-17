@@ -2,54 +2,63 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CoffeeController extends GetxController {
-  var kopiTubrukQty = 0.obs;
-  var cappucinoQty = 0.obs;
-
+  var coffeeMenu = <Map<String, dynamic>>[].obs;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  void incrementKopiTubruk() {
-    kopiTubrukQty++;
+  @override
+  void onInit() {
+    super.onInit();
+    loadCoffeeMenu();
   }
 
-  void decrementKopiTubruk() {
-    if (kopiTubrukQty > 0) {
-      kopiTubrukQty--;
+  void loadCoffeeMenu() async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('orders')
+          .where('id', isEqualTo: 'Coffee')
+          .get();
+
+      coffeeMenu.value = snapshot.docs.map((doc) {
+        return {
+          "docId": doc.id,
+          "itemName": doc["itemName"],
+          "price": doc["price"],
+          "imageUrl": doc["imageUrl"],
+          "description": doc["description"],
+          "quantity": 0, // Default quantity
+        };
+      }).toList();
+    } catch (e) {
+      print("Error loading coffee menu: $e");
+      Get.snackbar('Error', 'Gagal memuat menu kopi');
     }
   }
 
-  void incrementCappucino() {
-    cappucinoQty++;
-  }
-
-  void decrementCappucino() {
-    if (cappucinoQty > 0) {
-      cappucinoQty--;
+  void updateQuantity(String docId, bool isAdd) {
+    int index = coffeeMenu.indexWhere((item) => item["docId"] == docId);
+    if (index != -1) {
+      coffeeMenu[index]["quantity"] = isAdd
+          ? coffeeMenu[index]["quantity"] + 1
+          : (coffeeMenu[index]["quantity"] > 0
+              ? coffeeMenu[index]["quantity"] - 1
+              : 0);
+      coffeeMenu.refresh();
     }
   }
 
-  // Method to save order to Firestore
   void addToMyOrder() async {
     try {
-      if (kopiTubrukQty.value > 0) {
-        await _firestore.collection('orders').add({
-          'itemName': 'Kopi Tubruk',
-          'price': 'Rp. 7.000',
-          'quantity': kopiTubrukQty.value,
-          'timestamp': FieldValue.serverTimestamp(),
-          'status': 'pending',
-        });
+      for (var item in coffeeMenu) {
+        if (item["quantity"] > 0) {
+          await _firestore.collection('orders').add({
+            'itemName': item["itemName"],
+            'price': item["price"],
+            'quantity': item["quantity"],
+            'status': 'active',
+            'timestamp': FieldValue.serverTimestamp(),
+          });
+        }
       }
-
-      if (cappucinoQty.value > 0) {
-        await _firestore.collection('orders').add({
-          'itemName': 'Cappucino',
-          'price': 'Rp. 10.000',
-          'quantity': cappucinoQty.value,
-          'timestamp': FieldValue.serverTimestamp(),
-          'status': 'pending',
-        });
-      }
-
       Get.snackbar('Pesanan Ditambahkan', 'Pesanan Anda telah ditambahkan ke My Order');
       goToStartToBuy();
     } catch (e) {

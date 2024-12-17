@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../conrtrollers/check_order_controller.dart';
+import '../controllers/check_order_controller.dart';
 
 class CheckOrderPage extends StatefulWidget {
-  const CheckOrderPage({super.key});
+  const CheckOrderPage({Key? key}) : super(key: key);
 
   @override
   _CheckOrderPageState createState() => _CheckOrderPageState();
@@ -36,7 +36,7 @@ class _CheckOrderPageState extends State<CheckOrderPage> {
               ),
               const SizedBox(height: 24),
 
-              // Menu to select Ongoing or Complete
+              // Tab menu to select Ongoing or Complete
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -48,7 +48,7 @@ class _CheckOrderPageState extends State<CheckOrderPage> {
                     },
                     child: const Text(
                       "Ongoing",
-                      style: TextStyle(color: Colors.black), // Minimalist black text
+                      style: TextStyle(color: Colors.black),
                     ),
                   ),
                   TextButton(
@@ -59,19 +59,19 @@ class _CheckOrderPageState extends State<CheckOrderPage> {
                     },
                     child: const Text(
                       "Complete",
-                      style: TextStyle(color: Colors.black), // Minimalist black text
+                      style: TextStyle(color: Colors.black),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 20),
 
-              // Kotak detail pesanan sesuai dengan menu yang dipilih
+              // Display orders based on selected tab
               Expanded(
                 child: Obx(() {
                   if (_selectedIndex == 0) {
                     if (controller.ongoingOrders.isEmpty) {
-                      return const Center(child: Text('Tidak ada pesanan.'));
+                      return const Center(child: Text('No ongoing orders.'));
                     }
                     return ListView.builder(
                       itemCount: controller.ongoingOrders.length,
@@ -82,7 +82,7 @@ class _CheckOrderPageState extends State<CheckOrderPage> {
                     );
                   } else {
                     if (controller.completedOrders.isEmpty) {
-                      return const Center(child: Text('Tidak ada pesanan selesai.'));
+                      return const Center(child: Text('No completed orders.'));
                     }
                     return ListView.builder(
                       itemCount: controller.completedOrders.length,
@@ -95,8 +95,8 @@ class _CheckOrderPageState extends State<CheckOrderPage> {
                 }),
               ),
 
-              // Bagian tombol 'Buy Again'
               const SizedBox(height: 20),
+              
               const Center(
                 child: Column(
                   children: [
@@ -115,59 +115,54 @@ class _CheckOrderPageState extends State<CheckOrderPage> {
   }
 
   Widget _buildOrderBox(CoffeeOrder order, CheckOrderController controller, bool isComplete) {
-    final priceString = order.price.replaceAll(RegExp(r'[^0-9]'), '');
-    final price = int.tryParse(priceString) ?? 0;
-
     return Container(
       padding: const EdgeInsets.all(16.0),
       margin: const EdgeInsets.only(bottom: 16.0),
       decoration: BoxDecoration(
-        color: Colors.white, // Optional: background color
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.grey, // Add border color
+          color: Colors.grey,
           width: 1.0,
         ),
       ),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                order.quantity > 1 ? '${order.quantity} x ${order.itemName}' : order.itemName,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 16),
-              Text("Total: Rp.${(price * order.quantity).toString()}"),
-            ],
+          Text(
+            "Order: ${order.itemNames.join(', ')}",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
-          if (!isComplete) // Show check button only for ongoing orders
-            Positioned(
-              bottom: 8,
-              right: 8,
+          const SizedBox(height: 11),
+          Text("Payment Method: ${order.paymentMethod}", style: const TextStyle(fontSize: 15)),
+          const SizedBox(height: 8),
+          Text("Total: Rp.${order.total}", style: const TextStyle(fontSize: 15)),
+          const SizedBox(height: 8),
+          Text("Time: ${order.timestamp}", style: const TextStyle(fontSize: 15)),
+          const SizedBox(height: 16),
+          if (!isComplete)
+            Align(
+              alignment: Alignment.centerRight,
               child: IconButton(
                 icon: const Icon(Icons.check, size: 20, color: Colors.green),
                 onPressed: () async {
-                  // Show confirmation dialog
                   bool? confirm = await Get.dialog<bool?>(
                     AlertDialog(
-                      title: const Text("Konfirmasi"),
-                      content: const Text("Apakah Anda yakin pesanan sudah diterima?"),
+                      title: const Text("Confirm"),
+                      content: const Text("Are you sure this order is completed?"),
                       actions: [
                         TextButton(
                           onPressed: () => Get.back(result: true),
-                          child: const Text("Iya, Sudah"),
+                          child: const Text("Yes"),
                         ),
                         TextButton(
                           onPressed: () => Get.back(result: false),
-                          child: const Text("Belum"),
+                          child: const Text("No"),
                         ),
                       ],
                     ),
                   );
 
-                  // If confirmed, complete the order
                   if (confirm == true) {
                     controller.completeOrder(order);
                   }
@@ -181,7 +176,7 @@ class _CheckOrderPageState extends State<CheckOrderPage> {
 }
 
 class BuyAgainButton extends StatelessWidget {
-  const BuyAgainButton({super.key});
+  const BuyAgainButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

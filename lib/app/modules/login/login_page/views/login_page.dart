@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../routes/app_routes.dart';
 import '../controllers/login_controller.dart';
-
 
 class LoginPage extends StatelessWidget {
   final LoginController controller = Get.put(LoginController());
@@ -25,12 +25,29 @@ class LoginPage extends StatelessWidget {
                       width: 100,
                       image: AssetImage('assets/images/logo/doi_coffee.png'),
                     ),
-                    GestureDetector(
-                      onTap: controller.goToSignup,
-                      child: const Text(
-                        "Sign Up!",
-                        style: TextStyle(decoration: TextDecoration.underline),
-                      ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: controller.goToSignup,
+                          child: const Text(
+                            "Sign Up!",
+                            style:
+                                TextStyle(decoration: TextDecoration.underline),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        GestureDetector(
+                          onTap: () => Get.toNamed(AppRoutes.LOGIN_ADMIN),
+                          child: const Text(
+                            "Admin",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -42,7 +59,6 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-
                 const Text(
                   "Email",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -59,7 +75,6 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-
                 const Text(
                   "Password",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -77,7 +92,6 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 36),
-
                 Center(
                   child: GestureDetector(
                     onTap: controller.login,
@@ -98,7 +112,6 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-
                 Center(
                   child: GestureDetector(
                     onTap: controller.goToForgetPassword,

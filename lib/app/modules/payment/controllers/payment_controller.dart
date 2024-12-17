@@ -1,51 +1,140 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_routes.dart';
-import '../../order/controllers/my_order_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
 class PaymentController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String? selectedPaymentMethod;
+  var selectedPaymentMethod = RxnString();
+  var completedOrders = <OrderItem>[].obs;
 
-  // Mendapatkan instance MyOrderController untuk mengambil data pesanan
-  final MyOrderController _orderController = Get.find<MyOrderController>();
+  StreamSubscription? _completedOrdersSubscription;
 
-  // Metode untuk memilih metode pembayaran
-  void selectPaymentMethod(String? method) {
-    selectedPaymentMethod = method;
-    update();
+  @override
+  void onInit() {
+    super.onInit();
+    streamCompletedOrders();
   }
 
-  // Fungsi untuk menyimpan metode pembayaran ke Firestore
-  Future<void> savePaymentMethod(String orderId) async {
-    if (selectedPaymentMethod == null) return;
-    await _firestore.collection('payments').add({
-      'paymentMethod': selectedPaymentMethod,
-      'total': _orderController.getTotal(),
-      'timestamp': FieldValue.serverTimestamp(),
-      'orderId': orderId, // Menyimpan orderId di dokumen payments
+  // Stream untuk mendengarkan pesanan yang statusnya 'completed'
+  void streamCompletedOrders() {
+    final now = DateTime.now();
+    final startOfCurrentHour = DateTime(now.year, now.month, now.day, now.hour);
+
+    // Pastikan stream sebelumnya dibatalkan
+    _completedOrdersSubscription?.cancel();
+
+    _completedOrdersSubscription = _firestore
+        .collection('orders')
+        .where('status', isEqualTo: 'completed')
+        .where('timestamp',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfCurrentHour))
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .listen((QuerySnapshot snapshot) {
+      completedOrders.value =
+          snapshot.docs.map((doc) => OrderItem.fromDocument(doc)).toList();
     });
   }
 
-  // Konfirmasi pembayaran dan simpan data ke Firestore
-  void confirmPayment(String orderId) {
-    Get.defaultDialog(
-      title: "Konfirmasi Pembayaran",
-      middleText: "Apakah Anda sudah memilih metode pembayaran dengan benar?",
-      textCancel: "Belum",
-      textConfirm: "Iya",
-      confirmTextColor: Colors.white,
-      onConfirm: () async {
-        await savePaymentMethod(orderId); // Menyimpan metode pembayaran
-        Get.back(); // Tutup dialog
-        Get.toNamed(AppRoutes.TRANSACTION_SUCCESS);
-      },
+  // Memilih metode pembayaran
+  void selectPaymentMethod(String? method) {
+    selectedPaymentMethod.value = method;
+  }
+
+  // Mengubah semua pesanan yang statusnya 'completed' menjadi 'done'
+  Future<void> updateAllCompletedOrdersToDone() async {
+    final completedOrdersSnapshot = await _firestore
+        .collection('orders')
+        .where('status', isEqualTo: 'completed')
+        .get();
+
+    for (var doc in completedOrdersSnapshot.docs) {
+      await _firestore.collection('orders').doc(doc.id).update({
+        'status': 'done',
+      });
+    }
+  }
+
+  // Menambahkan data pembayaran ke Firestore
+  Future<void> addPaymentData() async {
+    try {
+      final totalAmount = _getTotal();
+
+      // Menambahkan data pembayaran ke collection payments
+      await _firestore.collection('payments').add({
+        'paymentMethod': selectedPaymentMethod.value,
+        'timestamp': FieldValue.serverTimestamp(),
+        'total': totalAmount,
+        'itemNames': completedOrders.map((item) => item.name).toList(),
+        'status': 'ongoing', // Menambahkan field status
+      });
+
+      // Menambahkan status 'done' ke semua pesanan yang sudah diselesaikan
+      await updateAllCompletedOrdersToDone();
+
+      // Memperbarui stream
+      streamCompletedOrders();
+
+      // Navigasi ke halaman sukses
+      Get.toNamed('/transaction-success');
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to process payment: $e',
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+  }
+
+  // Mendapatkan total dari pesanan yang statusnya 'completed'
+  double _getTotal() {
+    return completedOrders.fold(
+      0,
+      (sum, item) => sum + (item.price * item.quantity),
     );
   }
 
-  // Mendapatkan total harga pesanan dari MyOrderController
   String getTotal() {
-    return 'Rp. ${_orderController.getTotal().toStringAsFixed(0)}';
+    return 'Rp. ${_getTotal().toStringAsFixed(0)}';
+  }
+
+  @override
+  void onClose() {
+    _completedOrdersSubscription?.cancel(); // Pastikan stream dihentikan
+    super.onClose();
+  }
+}
+
+// Model OrderItem
+class OrderItem {
+  final String id;
+  final String name;
+  final double price;
+  final int quantity;
+  final String status;
+
+  OrderItem({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.quantity,
+    required this.status,
+  });
+
+  // Factory untuk mapping dokumen Firestore
+  factory OrderItem.fromDocument(DocumentSnapshot doc) {
+    return OrderItem(
+      id: doc.id,
+      name: doc['itemName'] ?? '',
+      price: _parsePrice(doc['price'] ?? '0'),
+      quantity: doc['quantity']?.toInt() ?? 1,
+      status: doc['status'] ?? 'completed',
+    );
+  }
+
+  // Helper untuk parsing harga
+  static double _parsePrice(String price) {
+    final cleanedPrice = price.replaceAll('Rp. ', '').replaceAll('.', '');
+    return double.tryParse(cleanedPrice) ?? 0.0;
   }
 }

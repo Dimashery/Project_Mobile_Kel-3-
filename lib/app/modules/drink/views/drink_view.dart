@@ -7,7 +7,6 @@ class DrinkView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mendapatkan instance controller
     final DrinkController controller = Get.put(DrinkController());
 
     return SafeArea(
@@ -33,7 +32,7 @@ class DrinkView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Judul menu minuman
+                // Title
                 const Align(
                   alignment: Alignment.center,
                   child: Text(
@@ -46,37 +45,33 @@ class DrinkView extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
 
-                // Es Teh Section
-                Obx(() => buildDrinkItem(
-                  context,
-                  imagePath: 'assets/images/drink/es_teh.png',
-                  name: 'Es Teh',
-                  description: 'Es Teh Manis Dingin',
-                  price: 'Rp. 5.000',
-                  quantity: controller.esTehQty.value,
-                  onAdd: controller.incrementEsTeh,
-                  onRemove: controller.decrementEsTeh,
-                )),
-                const SizedBox(height: 20),
-
-                // Es Jeruk Section
-                Obx(() => buildDrinkItem(
-                  context,
-                  imagePath: 'assets/images/drink/es_jeruk.png',
-                  name: 'Es Jeruk',
-                  description: 'Es Jeruk Segar',
-                  price: 'Rp. 7.000',
-                  quantity: controller.esJerukQty.value,
-                  onAdd: controller.incrementEsJeruk,
-                  onRemove: controller.decrementEsJeruk,
-                )),
+                // Display drink items from controller
+                Obx(() {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.drinkMenu.length,
+                    itemBuilder: (context, index) {
+                      var drinkItem = controller.drinkMenu[index];
+                      return buildDrinkItem(
+                        context,
+                        imagePath: drinkItem["imageUrl"],
+                        name: drinkItem["itemName"],
+                        description: drinkItem["description"],
+                        price: drinkItem["price"],
+                        quantity: drinkItem["quantity"],
+                        onAdd: () => controller.updateQuantity(drinkItem["docId"], true),
+                        onRemove: () => controller.updateQuantity(drinkItem["docId"], false),
+                      );
+                    },
+                  );
+                }),
 
                 const SizedBox(height: 30),
 
-                // Tombol ADD TO MY ORDER
+                // Add to My Order button
                 Center(
                   child: ElevatedButton(
-                    onPressed: controller.addToMyOrder, // Panggil method addToMyOrder
+                    onPressed: controller.addToMyOrder,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -97,7 +92,6 @@ class DrinkView extends StatelessWidget {
     );
   }
 
-  // Widget untuk membuat tampilan tiap minuman dengan gambar di kiri dan teks di kanan
   Widget buildDrinkItem(
     BuildContext context, {
     required String imagePath,
@@ -118,13 +112,14 @@ class DrinkView extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Image
           Container(
             width: MediaQuery.of(context).size.width * 0.3,
             height: MediaQuery.of(context).size.width * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
-                image: AssetImage(imagePath),
+                image: NetworkImage(imagePath),
                 fit: BoxFit.contain,
               ),
             ),
@@ -135,6 +130,7 @@ class DrinkView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
+                // Drink Name
                 Text(
                   name,
                   style: const TextStyle(
@@ -144,6 +140,7 @@ class DrinkView extends StatelessWidget {
                 ),
                 Text(description),
                 const SizedBox(height: 10),
+                // Price
                 Text(
                   price,
                   style: const TextStyle(
@@ -152,8 +149,10 @@ class DrinkView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
+                // Quantity adjustment row
                 Row(
                   children: [
+                    // Minus Button
                     Container(
                       width: 25,
                       height: 25,
@@ -168,11 +167,13 @@ class DrinkView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
+                    // Quantity Text
                     Text(
                       '$quantity',
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(width: 10),
+                    // Plus Button
                     Container(
                       width: 25,
                       height: 25,

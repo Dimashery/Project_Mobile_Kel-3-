@@ -3,6 +3,8 @@
 import 'package:get/get.dart';
 
 //LOGIN
+
+
 import '../modules/login/login_page/views/login_page.dart';
 import '../modules/login/page_start/views/page_start.dart';
 import '../modules/login/sign_up/views/sign_up_page.dart';
@@ -45,6 +47,15 @@ import '../modules/language/views/language_view.dart';
 //Routes
 import 'app_routes.dart';
 
+//ADMIN
+import '../modules/admin/login_admin/views/login_admin_page.dart';
+import '../modules/admin/home_admin/bindings/home_admin_binding.dart';
+import '../modules/admin/home_admin/views/home_admin_view.dart';
+import '../modules/admin/food_admin/views/food_admin_view.dart';
+import '../modules/admin/drink_admin/views/drink_admin_view.dart';
+import '../modules/admin/snack_admin/views/snack_admin_view.dart';
+import '../modules/admin/coffee_admin/views/coffee_admin_view.dart';
+import '../modules/admin/soft_drink_admin/views/soft_drink_admin_view.dart';
 
 
 class AppPages {
@@ -91,8 +102,18 @@ class AppPages {
     GetPage(name: AppRoutes.GIVE_RATING, page: () => const GiveRatingView()),
     GetPage(name: AppRoutes.ACCOUNT_SETTINGS, page: () => const AccountSettingsView()),
 
+  //ADMIN
 
+  GetPage(name: AppRoutes.LOGIN_ADMIN, page: () => LoginAdminPage()),
+  GetPage(name: AppRoutes.HOME_ADMIN, page: () => HomeAdminView(), binding: HomeAdminBinding(),),
+  GetPage(name: AppRoutes.FOOD_ADMIN, page: () => const FoodAdminView()),
+  GetPage(name: AppRoutes.DRINK_ADMIN, page: () => const DrinkAdminView(),),
+  GetPage(name: AppRoutes.SNACK_ADMIN, page: () => const SnackAdminView(),),
+  GetPage(name: AppRoutes.COFFEE_ADMIN, page: () => const CoffeeAdminView()),
+  GetPage(name: AppRoutes.SOFT_DRINK_ADMIN, page: () => const SoftDrinkAdminView()),
   ];
 
   static var routes;
 }
+
+

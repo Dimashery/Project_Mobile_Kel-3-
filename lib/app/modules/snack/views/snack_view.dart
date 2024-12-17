@@ -7,7 +7,6 @@ class SnackView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mendapatkan instance controller
     final SnackController controller = Get.put(SnackController());
 
     return SafeArea(
@@ -45,40 +44,29 @@ class SnackView extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
 
-                // Snack items
-                Center(
-                  child: Column(
-                    children: [
-                      Obx(() => _buildSnackItem(
+                // Display snack items
+                Obx(() {
+                  return Column(
+                    children: controller.snackMenu.map((snackItem) {
+                      return buildSnackItem(
                         context,
-                        imagePath: 'assets/images/snack/tempe_mendoan.png',
-                        name: 'Tempe Mendoan',
-                        description: 'Tempe Goreng Tepung',
-                        price: 'Rp. 10.000',
-                        quantity: controller.tempeMendoanQty.value,
-                        onAdd: controller.incrementTempeMendoan,
-                        onRemove: controller.decrementTempeMendoan,
-                      )),
-                      const SizedBox(height: 20),
+                        imagePath: snackItem["imageUrl"],
+                        name: snackItem["itemName"],
+                        description: snackItem["description"],
+                        price: snackItem["price"],
+                        quantity: snackItem["quantity"],
+                        onAdd: () => controller.updateQuantity(snackItem["docId"], true),
+                        onRemove: () => controller.updateQuantity(snackItem["docId"], false),
+                      );
+                    }).toList(),
+                  );
+                }),
 
-                      Obx(() => _buildSnackItem(
-                        context,
-                        imagePath: 'assets/images/snack/kentang_goreng.png',
-                        name: 'Kentang Goreng',
-                        description: 'Kentang Goreng Renyah',
-                        price: 'Rp. 8.000',
-                        quantity: controller.kentangGorengQty.value,
-                        onAdd: controller.incrementKentangGoreng,
-                        onRemove: controller.decrementKentangGoreng,
-                      )),
-                    ],
-                  ),
-                ),
                 const SizedBox(height: 30),
 
                 Center(
                   child: ElevatedButton(
-                    onPressed: controller.addToMyOrder, // Ubah sesuai controller
+                    onPressed: controller.addToMyOrder, // Add to order
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -96,7 +84,8 @@ class SnackView extends StatelessWidget {
     );
   }
 
-  Widget _buildSnackItem(
+ // Widget to build each drink item
+  Widget buildSnackItem(
     BuildContext context, {
     required String imagePath,
     required String name,
@@ -110,19 +99,20 @@ class SnackView extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        color: const Color.fromARGB(255, 243, 238, 197),
+        color: const Color.fromARGB(255, 243, 238, 197), // Light background
       ),
       padding: const EdgeInsets.all(14),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Image
           Container(
             width: MediaQuery.of(context).size.width * 0.3,
-            height: MediaQuery.of(context).size.width * 0.2, // Responsif lebar gambar
+            height: MediaQuery.of(context).size.width * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
-                image: AssetImage(imagePath),
+                image: NetworkImage(imagePath),
                 fit: BoxFit.contain,
               ),
             ),
@@ -132,7 +122,8 @@ class SnackView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
+                // Drink Name
                 Text(
                   name,
                   style: const TextStyle(
@@ -142,6 +133,7 @@ class SnackView extends StatelessWidget {
                 ),
                 Text(description),
                 const SizedBox(height: 10),
+                // Price
                 Text(
                   price,
                   style: const TextStyle(
@@ -150,9 +142,10 @@ class SnackView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Tombol tambah/kurang di bawah harga
+                // Quantity adjustment row
                 Row(
                   children: [
+                    // Minus Button
                     Container(
                       width: 25,
                       height: 25,
@@ -167,11 +160,13 @@ class SnackView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
+                    // Quantity Text
                     Text(
                       '$quantity',
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(width: 10),
+                    // Plus Button
                     Container(
                       width: 25,
                       height: 25,

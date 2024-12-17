@@ -7,7 +7,6 @@ class SoftDrinkView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mengambil instance dari SoftDrinkController
     final SoftDrinkController controller = Get.put(SoftDrinkController());
 
     return SafeArea(
@@ -16,11 +15,11 @@ class SoftDrinkView extends StatelessWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Get.back();
+              Get.back(); // Navigasi ke halaman sebelumnya
             },
           ),
           title: LinearProgressIndicator(
-            value: 1.0,
+            value: 0.5, // Progress bar
             backgroundColor: Colors.grey[300],
             color: Colors.black,
           ),
@@ -33,6 +32,7 @@ class SoftDrinkView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // Title
                 const Align(
                   alignment: Alignment.center,
                   child: Text(
@@ -45,38 +45,30 @@ class SoftDrinkView extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
 
-                Center(
-                  child: Column(
-                    children: [
-                      // Coca Cola Section
-                      Obx(() => _buildSoftDrinkItem(
+                // Display soft drink items from controller
+                Obx(() {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: controller.softDrinkMenu.length,
+                    itemBuilder: (context, index) {
+                      var drinkItem = controller.softDrinkMenu[index];
+                      return buildDrinkItem(
                         context,
-                        imagePath: 'assets/images/soft_drink/coca_cola.png',
-                        name: 'Coca Cola',
-                        description: 'Minuman ringan bersoda',
-                        price: 'Rp. 8.000',
-                        quantity: controller.cocaColaQty.value,
-                        onAdd: controller.incrementCocaCola,
-                        onRemove: controller.decrementCocaCola,
-                      )),
-                      const SizedBox(height: 20),
+                        imagePath: drinkItem["imageUrl"],
+                        name: drinkItem["itemName"],
+                        description: drinkItem["description"],
+                        price: drinkItem["price"],
+                        quantity: drinkItem["quantity"],
+                        onAdd: () => controller.updateQuantity(drinkItem["docId"], true),
+                        onRemove: () => controller.updateQuantity(drinkItem["docId"], false),
+                      );
+                    },
+                  );
+                }),
 
-                      // Sprite Section
-                      Obx(() => _buildSoftDrinkItem(
-                        context,
-                        imagePath: 'assets/images/soft_drink/fanta.png',
-                        name: 'Fanta',
-                        description: 'Minuman ringan bersoda dengan rasa Jeruk',
-                        price: 'Rp. 7.000',
-                        quantity: controller.fantaQty.value,
-                        onAdd: controller.incrementFanta,
-                        onRemove: controller.decrementFanta,
-                      )),
-                    ],
-                  ),
-                ),
                 const SizedBox(height: 30),
 
+                // Add to My Order button
                 Center(
                   child: ElevatedButton(
                     onPressed: controller.addToMyOrder,
@@ -85,7 +77,10 @@ class SoftDrinkView extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                       textStyle: const TextStyle(fontSize: 15),
                     ),
-                    child: const Text('ADD TO MY ORDER', style: TextStyle(color: Colors.white)),
+                    child: const Text(
+                      'ADD TO MY ORDER',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 50),
@@ -97,8 +92,8 @@ class SoftDrinkView extends StatelessWidget {
     );
   }
 
-  // Widget untuk membuat tampilan tiap minuman dengan gambar di kiri dan teks di kanan
-  Widget _buildSoftDrinkItem(
+  // Widget to build each soft drink item
+  Widget buildDrinkItem(
     BuildContext context, {
     required String imagePath,
     required String name,
@@ -112,19 +107,20 @@ class SoftDrinkView extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        color: const Color.fromARGB(255, 243, 238, 197),
+        color: const Color.fromARGB(255, 243, 238, 197), // Light background
       ),
       padding: const EdgeInsets.all(14),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Image
           Container(
             width: MediaQuery.of(context).size.width * 0.3,
             height: MediaQuery.of(context).size.width * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
-                image: AssetImage(imagePath),
+                image: NetworkImage(imagePath),
                 fit: BoxFit.contain,
               ),
             ),
@@ -135,6 +131,7 @@ class SoftDrinkView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
+                // Drink Name
                 Text(
                   name,
                   style: const TextStyle(
@@ -144,6 +141,7 @@ class SoftDrinkView extends StatelessWidget {
                 ),
                 Text(description),
                 const SizedBox(height: 10),
+                // Price
                 Text(
                   price,
                   style: const TextStyle(
@@ -152,8 +150,10 @@ class SoftDrinkView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
+                // Quantity adjustment row
                 Row(
                   children: [
+                    // Minus Button
                     Container(
                       width: 25,
                       height: 25,
@@ -168,11 +168,13 @@ class SoftDrinkView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
+                    // Quantity Text
                     Text(
                       '$quantity',
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(width: 10),
+                    // Plus Button
                     Container(
                       width: 25,
                       height: 25,

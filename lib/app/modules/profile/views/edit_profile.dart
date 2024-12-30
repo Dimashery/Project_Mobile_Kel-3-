@@ -7,11 +7,17 @@ class EditProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ProfileController controller = Get.find<ProfileController>();
+    final ProfileController controller = Get.find<ProfileController>(); // Using Get.find to access the existing controller instance
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Profile"),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(), // Back to the previous screen
+        ),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -28,7 +34,8 @@ class EditProfileView extends StatelessWidget {
                     // Profile Image with Edit Option
                     Obx(() => GestureDetector(
                       onTap: () {
-                        controller.pickImage();
+                        // Show dialog to choose between camera or gallery
+                        _showImagePickerDialog(context, controller);
                       },
                       child: CircleAvatar(
                         radius: 50,
@@ -79,6 +86,33 @@ class EditProfileView extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  // Show a dialog to let the user choose between camera or gallery
+  void _showImagePickerDialog(BuildContext context, ProfileController controller) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Pick Profile Image'),
+        content: const Text('Choose an option to select your profile image.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              controller.pickImage(fromCamera: true); // Pass fromCamera as a named argument
+              Navigator.of(context).pop();
+            },
+            child: const Text('Take Photo'),
+          ),
+          TextButton(
+            onPressed: () {
+              controller.pickImage(fromCamera: false); // Pass fromCamera as a named argument
+              Navigator.of(context).pop();
+            },
+            child: const Text('Choose from Gallery'),
+          ),
+        ],
       ),
     );
   }

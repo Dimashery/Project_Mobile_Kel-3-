@@ -1,6 +1,6 @@
+import 'package:doi_coffee/app/modules/profile/controllers/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/profile_controller.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -18,7 +18,7 @@ class ProfileView extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-           onPressed: () => Get.toNamed('/home'),
+          onPressed: () => Get.toNamed('/home'),
         ),
       ),
       body: SingleChildScrollView(
@@ -32,7 +32,8 @@ class ProfileView extends StatelessWidget {
                 children: [
                   Obx(() => GestureDetector(
                     onTap: () {
-                      controller.pickImage();
+                      // Display a dialog to choose between camera or gallery
+                      _showImagePickerDialog(context, controller);
                     },
                     child: CircleAvatar(
                       radius: screenWidth * 0.08,
@@ -53,7 +54,7 @@ class ProfileView extends StatelessWidget {
                               child: Obx(() => Text(
                                 controller.userName.value,
                                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
+                                overflow: TextOverflow.ellipsis, // Prevent text overflow
                               )),
                             ),
                             IconButton(
@@ -126,6 +127,33 @@ class ProfileView extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  // Show a dialog to let the user choose between camera or gallery
+  void _showImagePickerDialog(BuildContext context, ProfileController controller) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Pick Profile Image'),
+        content: const Text('Choose an option to select your profile image.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              controller.pickImage(fromCamera: true); // Camera option (pass 'fromCamera' as a named argument)
+              Navigator.of(context).pop();
+            },
+            child: const Text('Take Photo'),
+          ),
+          TextButton(
+            onPressed: () {
+              controller.pickImage(fromCamera: false); // Gallery option (pass 'fromCamera' as a named argument)
+              Navigator.of(context).pop();
+            },
+            child: const Text('Choose from Gallery'),
+          ),
+        ],
       ),
     );
   }

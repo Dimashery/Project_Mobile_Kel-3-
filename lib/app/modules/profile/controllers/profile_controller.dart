@@ -63,9 +63,9 @@ class ProfileController extends GetxController {
     Get.toNamed(route);
   }
 
-  // Request permission for gallery access
-  Future<void> requestPermission() async {
-    PermissionStatus status = await Permission.photos.request();
+  // Request permission for gallery and camera access
+  Future<void> requestPermission(Permission permission) async {
+    PermissionStatus status = await permission.request();
 
     if (status.isGranted) {
       print("Permission granted");
@@ -76,12 +76,50 @@ class ProfileController extends GetxController {
     }
   }
 
-  // Pick and upload profile image
-  void pickImage() async {
-    // Request permission before picking image
-    await requestPermission();
+  // Show a dialog to choose between gallery and camera
+  void chooseImageSource() async {
+    // Request permission for gallery and camera
+    await requestPermission(Permission.photos); // Request permission for photos
+    await requestPermission(Permission.camera); // Request permission for camera if taking a picture
 
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Choose Image Source'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.camera),
+                title: Text('Take a Photo'),
+                onTap: () {
+                  Navigator.pop(context);
+                  pickImage(fromCamera: true); // Use camera
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo),
+                title: Text('Choose from Gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  pickImage(fromCamera: false); // Use gallery
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Pick and upload profile image (either from gallery or camera)
+  void pickImage({required bool fromCamera}) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = fromCamera
+        ? await picker.pickImage(source: ImageSource.camera)
+        : await picker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
       final file = File(pickedFile.path);
       final currentUser = _auth.currentUser;
